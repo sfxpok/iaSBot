@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedPercent, MoveTank
+from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedPercent, MoveTank, MoveJoystick
 from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor
 from ev3dev2.led import Leds
@@ -19,12 +19,15 @@ robotMotors.crane.on_for_rotations(50, 8)
 print('ROTACOES SUBIR: ' + str(robotMotors.crane.rotations))
 rotUp = robotMotors.crane.rotations
 
-# crane.on_for_rotations(-100, 8)
+robotMotors.crane.on_for_rotations(-100, 8)
 
-# crane.on_for_seconds(100, 10)
-# crane.on_for_seconds(-100, 10)
+#robotMotors.crane.on_for_seconds(100, 10)
+#robotMotors.crane.on_for_seconds(-100, 10)
 
-#doubleWalk.on_for_rotations(50, 50, 3)
+#robotMotors.doubleJoystick.on(-1, -1, 50)
+#robotMotors.doubleWalk.on_for_rotations(100, -100, 6)
+#robotMotors.leftLeg.on_for_rotations(100, 5)
+#robotMotors.rightLeg.on_for_rotations(100, 5)
 
 sumOfDistanceCrane = 0
 
