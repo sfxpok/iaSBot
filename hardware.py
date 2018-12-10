@@ -25,3 +25,7 @@ class Motor:
 class Sensor:
     def __init__(self):
         self.touch = TouchSensor(INPUT_1)
+
+class Crane:
+    def __init__(self):
+        self.dist = 0

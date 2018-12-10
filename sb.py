@@ -11,9 +11,10 @@ from hardware import *
 
 robotMotors = Motor()
 robotSensors = Sensor()
+crane = Crane()
 
 sound = Sound()
-sound.speak("Testing")
+sound.speak("Running")
 
 robotMotors.crane.on_for_rotations(50, 8)
 print('ROTACOES SUBIR: ' + str(robotMotors.crane.rotations))
@@ -42,4 +43,7 @@ difDist = rotUp - rotDown
 
 print('total: ' + str(sumOfDistanceCrane))
 print('dif de distancia: ' + str(difDist))
+
+def calculateCraneHeight(height):
+    crane.dist += height
  
