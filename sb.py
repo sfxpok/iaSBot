@@ -9,6 +9,14 @@ from hardware import *
 
 # TODO: Add code here
 
+def calculateCraneHeight(height):
+    crane.dist += height
+
+def moveCrane(speed, rotations):
+    robotMotors.crane.on_for_rotations(speed, rotations)
+    height = speed / rotations
+    crane.dist += height
+
 robotMotors = Motor()
 robotSensors = Sensor()
 crane = Crane()
@@ -43,7 +51,4 @@ difDist = rotUp - rotDown
 
 print('total: ' + str(sumOfDistanceCrane))
 print('dif de distancia: ' + str(difDist))
-
-def calculateCraneHeight(height):
-    crane.dist += height
  
