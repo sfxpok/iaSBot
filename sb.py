@@ -10,12 +10,12 @@ from hardware import *
 # TODO: Add code here
 
 def calculateCraneHeight(height):
-    crane.dist += height
+    forklift.dist += height
 
-def moveCrane(speed, seconds): # see how much the crane needs to go to 0cm up to 5cm
-    robotMotors.crane.on_for_rotations(SpeedRPM(speed), seconds)
+def moveCrane(speed, seconds): # see how much the forklift needs to go to 0cm up to 5cm
+    robotMotors.forklift.on_for_rotations(SpeedRPM(speed), seconds)
     height = speed / seconds
-    crane.dist += height
+    forklift.dist += height
 
 #def moveRobot():
     # to be defined
@@ -31,7 +31,7 @@ def moveCrane(speed, seconds): # see how much the crane needs to go to 0cm up to
 
 robotMotors = Motor()
 robotSensors = Sensor()
-crane = Crane()
+forklift = Forklift()
 
 sound = Sound()
 sound.speak("Running")
@@ -43,14 +43,14 @@ def attack(punch, bullet): # boolean values
     elif bullet:
         robotMotors.attackZombie.on_for_rotations(50, 4) # bullet, positive axis
 
-robotMotors.crane.on_for_rotations(50, 8)
-print('ROTACOES SUBIR: ' + str(robotMotors.crane.rotations))
-rotUp = robotMotors.crane.rotations
+robotMotors.forklift.on_for_rotations(50, 8)
+print('ROTACOES SUBIR: ' + str(robotMotors.forklift.rotations))
+rotUp = robotMotors.forklift.rotations
 
-robotMotors.crane.on_for_rotations(-100, 8)
+robotMotors.forklift.on_for_rotations(-100, 8)
 
-#robotMotors.crane.on_for_seconds(100, 10)
-#robotMotors.crane.on_for_seconds(-100, 10)
+#robotMotors.forklift.on_for_seconds(100, 10)
+#robotMotors.forklift.on_for_seconds(-100, 10)
 
 #robotMotors.doubleJoystick.on(-1, -1, 50)
 #robotMotors.doubleWalk.on_for_rotations(100, -100, 6)
@@ -60,12 +60,12 @@ robotMotors.crane.on_for_rotations(-100, 8)
 sumOfDistanceCrane = 0
 
 while robotSensors.touch.is_released:
-    robotMotors.crane.on_for_rotations(-50, 4)
+    robotMotors.forklift.on_for_rotations(-50, 4)
     sumOfDistanceCrane += 1
     #print(str(sumOfDistanceCrane))
-    print('ROTACOES DESCER: ' + str(robotMotors.crane.rotations))
+    print('ROTACOES DESCER: ' + str(robotMotors.forklift.rotations))
 
-rotDown = robotMotors.crane.rotations
+rotDown = robotMotors.forklift.rotations
 difDist = rotUp - rotDown
 
 print('total: ' + str(sumOfDistanceCrane))
