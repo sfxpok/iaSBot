@@ -31,22 +31,3 @@ class Crane:
     def __init__(self):
         self.dist = 0
         self.maximumHeight = 500
-
-class Entity: # base class for inheritance
-    def __init__(self):
-        self.turnToPlay = False
-        self.coordX = 0
-        self.coordY = 0
-
-class Robot(Entity):
-    def __init__(self):
-        self.hasBullet = False
-        #self.turnToPlay = True
-        self.bikePieces = 0
-
-class Zombie(Entity):
-    def __init__(self):
-        #self.turnToPlay = False
-        self.isDead = False
-        self.isAlert = False
-        self.isStunned = False
