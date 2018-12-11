@@ -1,4 +1,4 @@
-from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedPercent, MoveTank, MoveJoystick
+from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedPercent, MoveTank, MoveJoystick, MediumMotor
 from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor
 from ev3dev2.led import Leds
@@ -7,7 +7,7 @@ from ev3dev2.sound import Sound
 # INPUT_1: Sensor toque
 # INPUT_2: Sensor ultrasom
 # INPUT_3: Sensor cor
-# INPUT_4: N/A
+# INPUT_4: Sensor giroscópio
 
 # OUTPUT_A: Motor esquerdo
 # OUTPUT_B: Motor direito
@@ -21,6 +21,7 @@ class Motor:
         self.crane = LargeMotor(OUTPUT_C)
         self.doubleWalk = MoveTank(OUTPUT_A, OUTPUT_B)
         self.doubleJoystick = MoveJoystick(OUTPUT_A, OUTPUT_B)
+        self.attackZombie = MediumMotor(OUTPUT_D)
 
 class Sensor:
     def __init__(self):
@@ -29,3 +30,15 @@ class Sensor:
 class Crane:
     def __init__(self):
         self.dist = 0
+
+class Robot:
+    def __init__(self):
+        self.hasBullet = False
+        self.turnToPlay = True
+        self.bikePieces = 0
+
+class Zombie:
+    def __init__(self):
+        self.turnToPlay = False
+        self.isDead = False
+        self.isAlert = False
