@@ -1,6 +1,10 @@
+###
+# Definição de classes relativamente aos motores e sensores do rôbo. Também tem a listagem das ligações a cada cabo
+###
+
 from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedRPM, MoveTank, MoveJoystick, MediumMotor, LargeMotor
 from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
-from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor
+from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor, ColorSensor, GyroSensor
 from ev3dev2.led import Leds
 from ev3dev2.sound import Sound
 
@@ -21,7 +25,7 @@ class Motor:
         self.forklift = LargeMotor(OUTPUT_C)
         self.doubleWalk = MoveTank(OUTPUT_A, OUTPUT_B)
         self.doubleJoystick = MoveJoystick(OUTPUT_A, OUTPUT_B)
-        self.attackZombie = MediumMotor(OUTPUT_D)
+        self.attack = MediumMotor(OUTPUT_D)
 
 class Sensor:
     def __init__(self):

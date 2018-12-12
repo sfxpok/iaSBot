@@ -1,3 +1,7 @@
+###
+# Criação e geração de entidades que fazem parte do jogo
+###
+
 from random import randint
 
 gameMap = [[None for col in range(6)] for row in range(6)] # empty matrix of size 6x6

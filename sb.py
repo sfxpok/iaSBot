@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+
+###
+# Ficheiro "principal" do projeto. Maior parte do código vai estar aqui definido, portanto o propósito do código que se vê aqui
+# pode variar.
+###
+
 from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedRPM, MoveTank, MoveJoystick, MediumMotor, LargeMotor
 from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor, ColorSensor
@@ -33,9 +39,9 @@ def moveCrane(speed, rotations): # see how much the forklift needs to go to 0cm 
 def robotAttack(punch, bullet): # boolean values
     if punch:
         robotMotors.leftLeg.on_for_rotations(10, 1) # aim the punch
-        robotMotors.attackZombie.on_for_rotations(-50, 4) # punch, negative axis
+        robotMotors.attack.on_for_rotations(-50, 4) # punch, negative axis
     elif bullet:
-        robotMotors.attackZombie.on_for_rotations(50, 4) # bullet, positive axis
+        robotMotors.attack.on_for_rotations(50, 4) # bullet, positive axis
 
 def playAlarm():
     gameWorld.alarm = True
