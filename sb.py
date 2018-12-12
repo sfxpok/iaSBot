@@ -36,12 +36,14 @@ def moveCrane(speed, rotations): # see how much the forklift needs to go to 0cm 
     height = speed / rotations
     forklift.height += height
 
-def robotAttack(punch, bullet): # boolean values
-    if punch:
-        robotMotors.leftLeg.on_for_rotations(10, 1) # aim the punch
-        robotMotors.attack.on_for_rotations(-50, 4) # punch, negative axis
-    elif bullet:
-        robotMotors.attack.on_for_rotations(50, 4) # bullet, positive axis
+def punchZombie(zombie):
+    robotMotors.leftLeg.on_for_rotations(10, 1) # aim the punch
+    robotMotors.attack.on_for_rotations(-50, 4) # punch, negative axis
+    stunZombie(zombie)
+
+def shootZombie(zombie):
+    robotMotors.attack.on_for_rotations(50, 4) # bullet, positive axis
+    killZombie(zombie)
 
 def playAlarm():
     gameWorld.alarm = True
@@ -58,6 +60,9 @@ def getBikePiece(character): # character is either survivorBot or zombie
 def dropBikePiece(character): # character is either survivorBot or zombie
     stopAlarm()
     character.bikePieces -= 1
+
+def killZombie(zombie):
+    zombie.isDead = True
 
 def stunZombie(zombie):
     zombie.isStunned = True
