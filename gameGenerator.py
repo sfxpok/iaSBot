@@ -26,12 +26,16 @@ class Zombie(Entity):
     def __init__(self):
         #self.turnToPlay = False
         #self.isDead = False
-        self.isAlert = False
+        #self.isAlert = False
         self.isStunned = False
 
 class Bike(Entity):
     def __init__(self):
         Entity.__init__(self, 6, 6)
+
+class mapBehaviour():
+    def __init__(self):
+        self.alarm = False
 
 def spawnZombies():
     zb1 = Zombie()

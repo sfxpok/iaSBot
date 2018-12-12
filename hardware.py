@@ -1,4 +1,4 @@
-from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedRPM, MoveTank, MoveJoystick, MediumMotor
+from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedRPM, MoveTank, MoveJoystick, MediumMotor, LargeMotor
 from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor
 from ev3dev2.led import Leds
@@ -29,5 +29,5 @@ class Sensor:
 
 class Forklift:
     def __init__(self):
-        self.dist = 0
+        self.height = 0
         self.maximumHeight = 500

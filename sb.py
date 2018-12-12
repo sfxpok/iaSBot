@@ -1,48 +1,57 @@
 #!/usr/bin/env python3
-from ev3dev2.motor import LargeMotor, OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedRPM, MoveTank, MoveJoystick, MediumMotor
+from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedRPM, MoveTank, MoveJoystick, MediumMotor, LargeMotor
 from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor, ColorSensor
 from ev3dev2.led import Leds
 from ev3dev2.sound import Sound
 
 from hardware import *
+from gameGenerator import *
 
 # TODO: Add code here
-
-def calculateCraneHeight(height):
-    forklift.dist += height
-
-def moveCrane(speed, seconds): # see how much the forklift needs to go to 0cm up to 5cm
-    robotMotors.forklift.on_for_rotations(SpeedRPM(speed), seconds)
-    height = speed / seconds
-    forklift.dist += height
-
-#def moveRobot():
-    # to be defined
-
-#def reconSurroundings():
-    # to be defined
-
-#def playRobot():
-    # to be defined
-
-#def playZombie():
-    # to be defined
-
-robotMotors = Motor()
-robotSensors = Sensor()
-forklift = Forklift()
 
 sound = Sound()
 sound.speak("Running")
 
-def attack(punch, bullet): # boolean values
+#mapAlarm = False
+
+robotMotors = Motor()
+robotSensors = Sensor()
+forklift = Forklift()
+gameWorld = mapBehaviour()
+survivorBot = Robot()
+
+def calculateCraneHeight(height):
+    forklift.height += height
+
+def moveCrane(speed, rotations): # see how much the forklift needs to go to 0cm up to 5cm
+    robotMotors.forklift.on_for_rotations(SpeedRPM(speed), rotations)
+    height = speed / rotations
+    forklift.height += height
+
+def robotAttack(punch, bullet): # boolean values
     if punch:
         robotMotors.leftLeg.on_for_rotations(10, 1) # aim the punch
         robotMotors.attackZombie.on_for_rotations(-50, 4) # punch, negative axis
     elif bullet:
         robotMotors.attackZombie.on_for_rotations(50, 4) # bullet, positive axis
 
+def playAlarm():
+    gameWorld.alarm = True
+    # set zombies on alarm
+
+def stopAlarm():
+    gameWorld.alarm = False
+    # set zombies to default behaviour
+
+def getBikePiece(character): # character is either survivorBot or zombie
+    playAlarm()
+    character.bikePieces += 1
+
+def dropBikePiece(character): # character is either survivorBot or zombie
+    stopAlarm()
+    character.bikePieces -= 1
+    
 robotMotors.forklift.on_for_rotations(50, 8)
 print('ROTACOES SUBIR: ' + str(robotMotors.forklift.rotations))
 rotUp = robotMotors.forklift.rotations
@@ -70,4 +79,15 @@ difDist = rotUp - rotDown
 
 print('total: ' + str(sumOfDistanceCrane))
 print('dif de distancia: ' + str(difDist))
- 
+
+#def moveRobot():
+    # to be defined
+
+#def reconSurroundings():
+    # to be defined
+
+#def playRobot():
+    # to be defined
+
+#def playZombie():
+    # to be defined
