@@ -20,6 +20,7 @@ robotSensors = Sensor()
 forklift = Forklift()
 gameWorld = mapBehaviour()
 survivorBot = Robot()
+bike = Bike()
 
 def calculateCraneHeight(height):
     forklift.height += height
@@ -51,6 +52,22 @@ def getBikePiece(character): # character is either survivorBot or zombie
 def dropBikePiece(character): # character is either survivorBot or zombie
     stopAlarm()
     character.bikePieces -= 1
+
+def stunZombie(zombie):
+    zombie.isStunned = True
+
+def stunHasPassed(zombie):
+    zombie.isStunned = False
+
+def isBikeFixed(robot):
+    if robot.bikePieces:
+        bike.mountedPieces += robot.bikePieces
+    elif bike.mountedPieces == 2:
+        endGame()
+
+def endGame():
+    sound.speak("Victory")
+    exit(0)
     
 robotMotors.forklift.on_for_rotations(50, 8)
 print('ROTACOES SUBIR: ' + str(robotMotors.forklift.rotations))

@@ -32,6 +32,7 @@ class Zombie(Entity):
 class Bike(Entity):
     def __init__(self):
         Entity.__init__(self, 6, 6)
+        self.mountedPieces = 0
 
 class mapBehaviour():
     def __init__(self):
