@@ -32,6 +32,7 @@ class Zombie(Entity):
         #self.isDead = False
         #self.isAlert = False
         self.isStunned = False
+        self.turnsUnableToPlay = 0
 
 class Bike(Entity):
     def __init__(self):

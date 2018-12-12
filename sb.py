@@ -16,17 +16,15 @@ from gameGenerator import *
 
 # TODO: Add code here
 
-sound = Sound()
-sound.speak("Running")
-
-#mapAlarm = False
-
 robotMotors = Motor()
 robotSensors = Sensor()
 forklift = Forklift()
 gameWorld = mapBehaviour()
 survivorBot = Robot()
 bike = Bike()
+sound = Sound()
+
+sound.speak("Running")
 
 def calculateCraneHeight(height):
     forklift.height += height
@@ -41,9 +39,9 @@ def punchZombie(zombie):
     robotMotors.attack.on_for_rotations(-50, 4) # punch, negative axis
     stunZombie(zombie)
 
-def shootZombie(zombie):
+def shootZombie(robot, zombie):
     robotMotors.attack.on_for_rotations(50, 4) # bullet, positive axis
-    killZombie(zombie)
+    killZombie(robot, zombie)
 
 def playAlarm():
     gameWorld.alarm = True
@@ -61,11 +59,19 @@ def dropBikePiece(character): # character is either survivorBot or zombie
     stopAlarm()
     character.bikePieces -= 1
 
-def killZombie(zombie):
+def killRobot(robot):
+    robot.isDead = True
+    endGame()
+
+def killZombie(robot, zombie):
     zombie.isDead = True
+    
+    if zombie.bikePieces:
+        robot.bikePieces += zombie.bikePieces
 
 def stunZombie(zombie):
     zombie.isStunned = True
+    zombie.turnsUnableToPlay = 2
 
 def stunHasPassed(zombie):
     zombie.isStunned = False
