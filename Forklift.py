@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C, MoveTank
+from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
 from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor
-from Motor import LargeMotor
+from Motor import LargeMotor, MoveTank
 
 class Forklift():
     def __init__(self):
         self.height = 0
-        self.engine = LargeMotor(OUTPUT_C)
+        self.engine = LargeMotor(OUTPUT_C, 30)
         #self.cal()
 
     #def cal(self):
@@ -25,11 +25,13 @@ class Forklift():
 
 def walkForward():
     engine = MoveTank(OUTPUT_A, OUTPUT_B)
-    engine.on_for_rotations(30, 30, 1.5)
+    #engine.on_for_rotations(30, 30, 1.5)
+    engine.movementRot(30, 30, 1.5)
 
 def walkBackwards():
     engine = MoveTank(OUTPUT_A, OUTPUT_B)
-    engine.on_for_rotations(-30, -30, 1)
+    #engine.on_for_rotations(-30, -30, 1)
+    engine.movementRot(-30, -30, 1)
 
 fork = Forklift()
 #fork2 = Forklift()
@@ -38,21 +40,28 @@ def lookingForObject():
 
     touch = TouchSensor()
     movtan = MoveTank(OUTPUT_A, OUTPUT_B)
+    foundBikePiece = 0
 
-    while (touch.is_pressed):
-        fork.moveFork(40)
+    while not(touch.value()):
+        fork.moveFork(10)
         walkForward()
-        fork.moveFork(-40) # !
 
-        if touch.is_pressed:
-            break
+        while not(touch.value()):
+            fork.moveFork(-1) # descobre se existe uma peça onde se situa
+            if touch.value()
+                foundBikePiece = 1
 
-        fork.moveFork(40)
-        walkForward()
-        
+        #fork.moveFork(10)
+        #walkForward()
+
+    fork.moveFork(1)    
     walkBackwards()
-    fork.moveFork(-40)
-    walkForward()
-    fork.moveFork(40)
 
-lookingForObject()
+    while not(touch.value()):
+        fork.moveFork(-1)
+
+    walkForward()
+    fork.moveFork(10)
+    walkBackwards()
+
+#lookingForObject()
