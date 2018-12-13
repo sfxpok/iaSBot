@@ -10,7 +10,6 @@ class Motor:
     def setSpeed(self, speed):
         self.speed = speed
   
-    
 class LargeMotor(Motor):
     def __init__(self, output, speed=None):
         self.engine = motor.LargeMotor(output)
@@ -25,7 +24,9 @@ class LargeMotor(Motor):
         
     def movementSec(self, seconds):
         self.engine.on_for_seconds(self.speed, seconds)
-
+    
+    def getPosition(self):
+        self.engine.get_attr_int
 
 class MediumMotor(Motor):
     def __init__(self, output, speed=None):
