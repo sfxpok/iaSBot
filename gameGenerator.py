@@ -6,10 +6,10 @@ from random import randint
 
 gameMap = [[None for col in range(6)] for row in range(6)] # empty matrix of size 6x6
 
-class Bullet:
-    def __init__(self):
-        self.startingPointX = randint(0, 6)
-        self.startingPointY = randint(0, 6)
+#class Bullet:
+#    def __init__(self):
+#        self.startingPointX = randint(0, 6)
+#        self.startingPointY = randint(0, 6)
 
 class Entity: # base class for inheritance
     def __init__(self, x, y):
@@ -27,12 +27,14 @@ class Robot(Entity):
         #self.bikePieces = 0
 
 class Zombie(Entity):
-    def __init__(self):
+    def __init__(self, x, y):
         #self.turnToPlay = False
         #self.isDead = False
         #self.isAlert = False
         self.isStunned = False
         self.turnsUnableToPlay = 0
+        self.coordX = x
+        self.coordY = y
 
 class Bike(Entity):
     def __init__(self):
@@ -44,11 +46,11 @@ class mapBehaviour():
         self.alarm = False
 
 def spawnZombies():
-    zb1 = Zombie()
-    zb2 = Zombie()
+    zb1 = Zombie(1,6)
+    zb2 = Zombie(6,1)
 
-    zb1.coordX = 1
-    zb1.coordY = 6
+    # zb1.coordX = 1
+    # zb1.coordY = 6
 
-    zb2.coordX = 6
-    zb2.coordY = 1
+    # zb2.coordX = 6
+    # zb2.coordY = 1

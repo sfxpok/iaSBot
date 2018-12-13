@@ -16,7 +16,7 @@ from ev3dev2.sound import Sound
 # OUTPUT_A: Motor esquerdo
 # OUTPUT_B: Motor direito
 # OUTPUT_C: Motor empilhadora
-# OUTPUT_D: Motor ataque
+# OUTPUT_D: Motor ataque (Positivo=Bala/Negativo=Soco)
 
 class Motor:
     def __init__(self):
