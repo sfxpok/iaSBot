@@ -21,13 +21,13 @@ class Forklift():
 
         touch = TouchSensor()
 
-        file_object = open("/sys/class/tacho-motor/motor3/position", "r+")
-        file_object.write('0')
+        #file_object = open("/sys/class/tacho-motor/motor3/position", "r+")
+        #file_object.write('0')
         #file_object.close()
 
         #file_object = open("/sys/class/tacho-motor/motor3/position", "r")
-        intPos = file_object.read()
-        file_object.close()
+        #self.intPos = file_object.read()
+        #file_object.close()
 
         #while not(touch.value()):
             #self.engine.movementRot(-30)
@@ -36,7 +36,14 @@ class Forklift():
 
         #self.engine.movementRot(30)
 
-        
+        while not(touch.value()):
+            fork.moveFork(-1)
+
+        positionFile = open("/sys/class/tacho-motor/motor3/position", "r+")
+        positionFile.write(heightToPressTouch)
+        positionFile.close()
+
+        print(positionFile.read())
 
     def getHeight(self):
         return self.height

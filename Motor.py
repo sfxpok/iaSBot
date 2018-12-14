@@ -27,6 +27,10 @@ class LargeMotor(Motor):
         
     def movementSec(self, seconds):
         self.engine.on_for_seconds(self.speed, seconds)
+    
+    def moveDirection(self, direction):
+        self.engine.run_forever()
+    
 
     #def getPosition(self):
         #return self.position
@@ -76,5 +80,5 @@ class MoveTank():
 
 def teste(teste):
     MoveTank(motor.OUTPUT_A, motor.OUTPUT_B).movementDeg(teste)
-a = MoveTank(motor.OUTPUT_A, motor.OUTPUT_B)
+#a = MoveTank(motor.OUTPUT_A, motor.OUTPUT_B)
 #teste()
