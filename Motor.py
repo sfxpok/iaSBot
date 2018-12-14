@@ -1,7 +1,6 @@
 from ev3dev2 import motor
 import threading
 
-
 class Motor:
     def __init__(self, speed=25):
         self.speed = motor.SpeedPercent(speed)
@@ -14,7 +13,9 @@ class Motor:
   
 class LargeMotor(Motor):
     def __init__(self, output, speed=None):
+        Motor.__init__(self)
         self.engine = motor.LargeMotor(output)
+        #self.position = motor.LargeMotor.position_sp
         if (speed):
             self.setSpeed(speed)
 
@@ -26,15 +27,21 @@ class LargeMotor(Motor):
         
     def movementSec(self, seconds):
         self.engine.on_for_seconds(self.speed, seconds)
+
+    #def getPosition(self):
+        #return self.position
     
-    def getPosition(self):
-        self.engine.get_attr_int
+    #def setPosition(self, position):
+        #self.position = position
+    
 
 class MediumMotor(Motor):
     def __init__(self, output, speed=None):
         self.engine = motor.MediumMotor(output)
+        Motor.__init__(self)
         if (speed):
             self.setSpeed(speed)
+            
 
     def movementDeg(self, degree):
         self.engine.on_for_degrees(self.speed, degree)
@@ -45,26 +52,29 @@ class MediumMotor(Motor):
     def movementSec(self, seconds):
         self.engine.on_for_seconds(self.speed, seconds)
 
-class MoveTank(Motor):
-    def __init__(self, output1, output2, speed=None):
-        self.engine1 = LargeMotor(output1)
-        self.engine2 = LargeMotor(output2)
-        if(speed):
-            setSpeed(self.speed)
-        
+class MoveTank():
+    def __init__(self, output1, output2, speed=35):
+        """ self.engine1 = LargeMotor(output1)
+        self.engine2 = LargeMotor(output2) """
+        self.engine = motor.MoveTank(output1, output2)
+        self.speed = speed
+    
+    def movementDeg(self, degree):
+        self.engine.on_for_degrees(self.speed, self.speed, degree)
 
-    def movementDeg(self, degree1, degree2):
-        threading.Thread(target=self.engine1.movementDeg(degree1), name='engine1', daemon=True).start()
-        threading.Thread(target=self.engine1.movementDeg(degree2), name='engine2', daemon=True).start()
+    def movementRot(self, rotation):
+        self.engine.on_for_rotations(self.speed, self.speed, rotation)
 
-    def movementRot(self, rotation1, rotation2):
-        threading.Thread(target=self.engine1.movementRot(rotation1), name='engine1', daemon=True).start()
-        threading.Thread(target=self.engine1.movementRot(rotation2), name='engine2', daemon=True).start()
+    def movementSec(self, seconds):
+        self.engine.on_for_seconds(self.speed, self.speed, seconds)
 
-        
-    def movementSec(self, seconds1, seconds2):
-        threading.Thread(target=self.engine1.movementSec(seconds1), name='engine1', daemon=True).start()
-        threading.Thread(target=self.engine1.movementSec(seconds2), name='engine2', daemon=True).start()
+    def turnRight(self):
+        self.engine.on_for_degrees(self.speed, -self.speed, 389.25)
+    
+    def turnLeft(self):
+        self.engine.on_for_degrees(-self.speed, self.speed, 389.25)
 
-
-MoveTank(motor.OUTPUT_A, motor.OUTPUT_B).movementRot(2,2)
+def teste(teste):
+    MoveTank(motor.OUTPUT_A, motor.OUTPUT_B).movementDeg(teste)
+a = MoveTank(motor.OUTPUT_A, motor.OUTPUT_B)
+#teste()

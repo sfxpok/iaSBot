@@ -87,6 +87,7 @@ def endGame():
     exit(0)
     
 robotMotors.forklift.on_for_rotations(50, 8)
+robotMotors.forklift.run_to_abs_pos
 print('ROTACOES SUBIR: ' + str(robotMotors.forklift.rotations))
 rotUp = robotMotors.forklift.rotations
 
