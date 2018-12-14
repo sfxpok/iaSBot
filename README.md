@@ -1,12 +1,12 @@
-# Survivor Bot
+# 🤖 Survivor Bot 🤖
 
 Developed with Visual Studio Code along with the extension [ev3dev-browser](https://marketplace.visualstudio.com/items?itemName=dlech.ev3dev-browser) on several systems: 
 
-..* Ubuntu 18.10 x86_64
+- Linux Mint 19 x86_64
 
-..* Windows 7 64-bit
+- Ubuntu 18.10 x86_64
 
-..* Linux Mint 19 x86_64
+- Windows 7 64-bit
 
 Dependency: [python-ev3dev2](https://pypi.org/project/python-ev3dev2/)
 
