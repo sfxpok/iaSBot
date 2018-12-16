@@ -11,12 +11,8 @@ def punch():
     engine.movementDeg(-362)
     mov.on_for_degrees(-30, 30, 100)
 
-
 def shoot():
     engine = MediumMotor(OUTPUT_D, 50)
-    print('Shoooting')
+    print('Shooting')
     engine.movementDeg(362)
     
-
-
-

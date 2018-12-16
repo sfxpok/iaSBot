@@ -1,119 +1,80 @@
 #!/usr/bin/env python3
-from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
-from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor
-from Motor import LargeMotor, MoveTank
 
-class Forklift():
+from Motor import LargeMotor
+from ev3dev2.sensor.lego import TouchSensor
+from ev3dev2.motor import OUTPUT_C
+from ev3dev2.sound import Sound
+from Motor import MoveTank
+import time
+import threading
+
+
+class Forklift:
     def __init__(self):
-        self.height = 0
-        self.engine = LargeMotor(OUTPUT_C, 30)
-        #self.cal()
-
-    #def cal(self):
-     #   self.engine.movementRot(50)
-      #  self.heightMax = self.engine.getPosition()
-
-    def calibrateFork(self):
-
-        minHeight = 0
-        maxHeight = 1850
-        heightToPressTouch = -350
-
-        touch = TouchSensor()
-
-        #file_object = open("/sys/class/tacho-motor/motor3/position", "r+")
-        #file_object.write('0')
-        #file_object.close()
-
-        #file_object = open("/sys/class/tacho-motor/motor3/position", "r")
-        #self.intPos = file_object.read()
-        #file_object.close()
-
-        #while not(touch.value()):
-            #self.engine.movementRot(-30)
-
-        #currentHeight = heightToPressTouch
-
-        #self.engine.movementRot(30)
-
-        while not(touch.value()):
-            fork.moveFork(-1)
-
-        positionFile = open("/sys/class/tacho-motor/motor3/position", "r+")
-        positionFile.write(heightToPressTouch)
-        positionFile.close()
-
-        print(positionFile.read())
-
-    def getHeight(self):
-        return self.height
-
-    def setHeight(self, height):
-        self.height = height
-
-    def moveFork(self, height):
-       self.engine.movementRot(height)
-
-    def lookingForObject(self):
-
-        touch = TouchSensor()
-        movtan = MoveTank(OUTPUT_A, OUTPUT_B)
-        foundBikePiece = 0
-
-        #min height: 0
-        #max height: 1850
-        #not sure
-        #to press touch sensor: -350
-
-        file_object = open("/sys/class/tacho-motor/motor3/position", "r")
-
-        for line in file_object:
-            if line.strip():
-                intPos = int(line)
+        self.fork = LargeMotor(OUTPUT_C)
+        self.fork.movementRot(8)
+        self.maxRot = self.currentRot = 0
+        threading.Thread(target=self.waitForSensor, daemon=True).start()
+        self.calibration()
+        self.maxRot = round(self.maxRot, 2)
+        self.setRot(5)
+        Sound().speak('Forklift, ready')
     
-        print(intPos)
+    def calibration(self):
+        while self.loop:
+            self.loop = True
+            self.fork.movementRot(-0.2)
+            self.maxRot += 0.2
+    
+    def waitForSensor(self):
+        self.loop = True
+        time.sleep(1)
+        TouchSensor().wait_for_pressed()
+        self.loop = False
 
-        #while intPos > -350:
-        fork.moveFork(0.1)
-        walkForward()
+    def getRot(self):
+        return self.currentRot
 
-        while intPos > -350 or foundBikePiece != 0:
-            fork.moveFork(-1) # descobre se existe uma peça onde se situa
-            if touch.value():
-                foundBikePiece = 1
+    def setRot(self, rot):
+        if rot <= self.maxRot and rot >= -0.5 and rot != self.currentRot:
+            threading.Thread(target=self.waitForSensor, daemon=True).start()
+            if self.currentRot <= rot:
+                while self.loop and self.currentRot < rot:
+                    self.currentRot += 0.2
+                    self.fork.movementRot(0.2)
+            else:
+                while self.loop and self.currentRot > rot:
+                    self.currentRot -= 0.2
+                    self.fork.movementRot(-0.2)
 
-                for line in file_object:
-                    if line.strip():
-                        intPos = int(line)
+    def objDetector(self):
+        lastCurrent = self.currentRot
+        self.setRot(5)
+        threading.Thread(target=self.waitForSensor, daemon=True).start()
+        while self.loop:
+            self.currentRot -= 0.2
+            self.fork.movementRot(-0.2)
+        if round(self.currentRot, 2) > 0.6:
+            self.setRot(lastCurrent)
+            return True
+        else:
+            self.setRot(lastCurrent)
+            return False
+
         
-            print(intPos)
+    def pickObject(self):
+        self.setRot(5)
+        trys = 2
+        while trys > 0:
+            if self.objDetector():
+                MoveTank().movementRot(-1)
+                self.setRot(-0.2)
+                MoveTank().movementRot(1)
+                self.setRot(5)
+                break
+            else:
+                MoveTank().movementRot(1)
+                trys -= 1
 
-            #fork.moveFork(10)
-            #walkForward()
-
-        fork.moveFork(0.1)    
-        walkBackwards()
-
-        while intPos > 0:
-            fork.moveFork(-0.1)
-            intPos = file_object.read()
-
-        walkForward()
-        fork.moveFork(2)
-        walkBackwards()
-
-def walkForward():
-    engine = MoveTank(OUTPUT_A, OUTPUT_B)
-    #engine.on_for_rotations(30, 30, 1.5)
-    engine.movementRot(3)
-
-def walkBackwards():
-    engine = MoveTank(OUTPUT_A, OUTPUT_B)
-    #engine.on_for_rotations(-30, -30, 1)
-    engine.movementRot(-3)
-
-fork = Forklift()
-#fork2 = Forklift()
-
-fork.calibrateFork()
-#fork.lookingForObject()
+    
+a = Forklift()

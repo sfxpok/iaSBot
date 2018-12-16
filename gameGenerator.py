@@ -1,3 +1,4 @@
+
 ###
 # Criação e geração de entidades que fazem parte do jogo
 ###
@@ -25,7 +26,7 @@ class Orientation(Enum):
 
 class Robot(Entity):
     def __init__(self):
-        Entity.__init__(self, 1, 1)
+        Entity.__init__(self, 0, 5)
         self.hasBullet = False
         self.turnToPlay = True # This shoud be false
         self.piecesCarry = 0
@@ -33,6 +34,9 @@ class Robot(Entity):
         self.canAttack = True
         self.canScout = True
         self.orientation = None
+        self.alarm = False
+
+#--------------Section to delete-------
 
 class Zombie(Entity):
     def __init__(self, x, y):
@@ -43,13 +47,11 @@ class Zombie(Entity):
 
 class Bike(Entity):
     def __init__(self):
-        Entity.__init__(self, 6, 6)
+        Entity.__init__(self, 5, 0)
         self.mountedPieces = 0
 
-class mapBehaviour():
-    def __init__(self):
-        self.alarm = False
-
 def spawnZombies():
-    zb1 = Zombie(1,6)
-    zb2 = Zombie(6,1)
+    zb1 = Zombie(0,0)
+    zb2 = Zombie(5,5)
+
+#---------End of section--------

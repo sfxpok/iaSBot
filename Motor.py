@@ -1,4 +1,5 @@
 from ev3dev2 import motor
+from ev3dev2.sensor.lego import GyroSensor
 import threading
 
 class Motor:
@@ -31,12 +32,10 @@ class LargeMotor(Motor):
     def moveDirection(self, direction):
         self.engine.run_forever()
     
-
-    #def getPosition(self):
-        #return self.position
+    def motorReset(self):
+        self.engine.reset
     
-    #def setPosition(self, position):
-        #self.position = position
+
     
 
 class MediumMotor(Motor):
@@ -57,10 +56,8 @@ class MediumMotor(Motor):
         self.engine.on_for_seconds(self.speed, seconds)
 
 class MoveTank():
-    def __init__(self, output1, output2, speed=35):
-        """ self.engine1 = LargeMotor(output1)
-        self.engine2 = LargeMotor(output2) """
-        self.engine = motor.MoveTank(output1, output2)
+    def __init__(self, speed=25):
+        self.engine = motor.MoveTank(motor.OUTPUT_A, motor.OUTPUT_B)
         self.speed = speed
     
     def movementDeg(self, degree):
@@ -71,14 +68,44 @@ class MoveTank():
 
     def movementSec(self, seconds):
         self.engine.on_for_seconds(self.speed, self.speed, seconds)
+    
+    def startEngine(self):
+        self.engine.on(self.speed, self.speed)
+    
+    def stopEngine(self):
+        self.engine.off()
+        
 
     def turnRight(self):
-        self.engine.on_for_degrees(self.speed, -self.speed, 389.25)
+        gyro = GyroSensor()
+        gyro.mode = gyro.modes[1]
+        while gyro.rate != 0:
+            pass
+        gyro.mode = gyro.modes[0]
+        self.engine.on(-self.speed, self.speed)        
+        while abs(gyro.angle) < 75:
+            pass
+        self.engine.on(-self.speed/2, self.speed/2)
+        while abs(gyro.angle) < 90:
+            pass
+        self.engine.off()
     
     def turnLeft(self):
-        self.engine.on_for_degrees(-self.speed, self.speed, 389.25)
+        gyro = GyroSensor()
+        gyro.mode = gyro.modes[1]
+        while gyro.rate != 0:
+            pass
+        gyro.mode = gyro.modes[0]
+        self.engine.on(self.speed, -self.speed)        
+        while abs(gyro.angle) < 75:
+            pass
+        self.engine.on(self.speed/2, -self.speed/2)
+        while abs(gyro.angle) < 90:
+            pass
+        self.engine.off()
 
 def teste(teste):
-    MoveTank(motor.OUTPUT_A, motor.OUTPUT_B).movementDeg(teste)
+    MoveTank().movementDeg(teste)
 #a = MoveTank(motor.OUTPUT_A, motor.OUTPUT_B)
 #teste()
+

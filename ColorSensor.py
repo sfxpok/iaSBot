@@ -39,3 +39,10 @@ class ColorDetector():
         self.setRed(min(int((self.getRed() * 255) / self.red_max), 255))
         self.setGreen(min(int((self.getGreen() * 255) / self.green_max), 255))
         self.setBlue(min(int((self.getBlue() * 255) / self.blue_max), 255))
+
+def checkColor():
+    color = ColorSensor().color_name
+    # print(color)
+    return color
+
+                

@@ -30,7 +30,7 @@ class Motor:
 class Sensor:
     def __init__(self):
         self.touch = TouchSensor(INPUT_1)
-        touch.cor()
+        #touch.cor()
 
 class Forklift:
     def __init__(self):
