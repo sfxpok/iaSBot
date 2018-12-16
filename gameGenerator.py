@@ -18,11 +18,13 @@ class Object(Entity): # base class for inheritance
         Entity.__init__(self, x, y)
         self.name = name
 
+
 class Orientation(Enum):
-    north = 1
-    west = 2
-    east = 3
-    south = 4
+    north = 0
+    east = 90
+    south = 180
+    west = 270
+    
 
 class Robot(Entity):
     def __init__(self):

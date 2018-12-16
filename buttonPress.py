@@ -38,6 +38,7 @@ class InitDir():
         self.currentDir()
         print('End of Test')
 
+
     def walking(self):
         self.loop = True
         self.movement = 0
@@ -49,16 +50,20 @@ class InitDir():
         self.dead = True
         print('Thread died')
 
+
     def waitforColor(self):
         while checkColor() == 'White':
             None
+
         self.loop = False
         color = checkColor()
         print('Color detected ', color)
         while not self.dead:
             None
+            
         MoveTank().movementDeg(-self.movement)
         return color
+
 
     def currentDir(self):
         if self.firstColor == 'Red' and self.secondColor == 'Red':
