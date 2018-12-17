@@ -8,6 +8,8 @@ Developed with Visual Studio Code along with the extension [ev3dev-browser](http
 
 - Windows 7 64-bit
 
+The [ev3dev](https://www.ev3dev.org/) firmware was used for the development of this project with a memory card. Usually our computers were always connected to the Brickman with Bluetooth.
+
 ### Sensors
 
 - INPUT_1: Touch sensor

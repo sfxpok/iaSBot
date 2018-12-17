@@ -17,7 +17,7 @@ class Forklift:
         threading.Thread(target=self.waitForSensor, daemon=True).start()
         self.calibration()
         self.maxRot = round(self.maxRot, 2)
-        self.setRot(5)
+        self.setRot(6)
         Sound().speak('Forklift, ready')
         self.leds = Leds()
 
@@ -27,8 +27,9 @@ class Forklift:
     
     def stopAlarm(self):
         self.alarmLoop = False
+        """
         self.leds.set_color('LEFT', 'GREEN')
-        self.leds.set_color('RIGHT', 'GREEN')
+        self.leds.set_color('RIGHT', 'GREEN') """
 
     def alarm(self):
         while self.alarmLoop:
@@ -87,7 +88,7 @@ class Forklift:
 
     def objDetector(self):
         lastCurrent = self.currentRot
-        self.setRot(5)
+        self.setRot(6)
         threading.Thread(target=self.waitForSensor, daemon=True).start()
         while self.loop:
             self.currentRot -= 0.2
@@ -101,7 +102,7 @@ class Forklift:
 
         
     def pickObject(self):
-        self.setRot(5)
+        self.setRot(6)
         trys = 2
         while trys > 0:
             if self.objDetector():
