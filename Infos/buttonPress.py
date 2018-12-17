@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 from ev3dev2 import button
-
+from ev3dev2.sensor.lego import ColorSensor
 from gameGenerator import *
 from Motor import *
 from ColorSensor import *
 
-
+def checkColor():
+    color = ColorSensor().color_name
+    return color
 
 def checkButtons():
     print('A CORRER')
@@ -21,7 +23,6 @@ def checkButtons():
         if button.Button().enter:
             print('Button ENTER pressed')
         
-    
 class InitDir():
     def __init__(self):
         print('Test Start')
