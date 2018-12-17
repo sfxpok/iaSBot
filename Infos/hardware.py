@@ -8,16 +8,6 @@ from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor, ColorSensor, Gyro
 from ev3dev2.led import Leds
 from ev3dev2.sound import Sound
 
-# INPUT_1: Sensor toque
-# INPUT_2: Sensor ultrasom
-# INPUT_3: Sensor cor
-# INPUT_4: Sensor giroscópio
-
-# OUTPUT_A: Motor esquerdo
-# OUTPUT_B: Motor direito
-# OUTPUT_C: Motor empilhadora
-# OUTPUT_D: Motor ataque (Positivo=Bala/Negativo=Soco)
-
 class Motor:
     def __init__(self):
         self.leftLeg = LargeMotor(OUTPUT_A)

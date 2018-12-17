@@ -1,128 +1,169 @@
 #!/usr/bin/env python3
 
 ###
-# Ficheiro "principal" do projeto. Maior parte do código vai estar aqui definido, portanto o propósito do código que se vê aqui
-# pode variar.
+# Main file from robot here we will call everything we need
 ###
+from random import randint
+from ev3dev2 import button
+from Forklift import Forklift
+from Map import Map
+import Attack as at
 
-from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C, OUTPUT_D, SpeedRPM, MoveTank, MoveJoystick, MediumMotor, LargeMotor
-from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
-from ev3dev2.sensor.lego import TouchSensor, UltrasonicSensor, ColorSensor
-from ev3dev2.led import Leds
-from ev3dev2.sound import Sound
+#Variable initialization:
+fork = Forklift()
+world = Map()
+haveAmmo = False
+#Definitions:
 
-from hardware import *
-from gameGenerator import *
+def checkButtons():
+    while True:
+        if button.Button().right:
+            return True
+        if button.Button().down:
+            fork.stopAlarm()
+        if button.Button().backspace:
+            return False    
+        """ if button.Button().left:
+            print('Button LEFT pressed')
+        if button.Button().right:
+            print('Button RIGHT pressed')
+        if button.Button().enter:
+            print('Button ENTER pressed')
+        """
 
-# TODO: Add code here
+#Main loop:
+while True:
+    if checkButtons():
+        itemsAround = world.fullRecognition()   #Get all objets arround me
+        
+        if itemsAround[0] == 'Green':
+            world.goDirection('North')
+            haveAmmo = True
+            continue
+        if itemsAround[1] == 'Green':
+            world.goDirection('East')
+            haveAmmo = True
+            continue
 
-robotMotors = Motor()
-robotSensors = Sensor()
-forklift = Forklift()
-gameWorld = mapBehaviour()
-survivorBot = Robot()
-bike = Bike()
-sound = Sound()
+        if itemsAround[2] == 'Green':
+            world.goDirection('South')
+            haveAmmo = True
+            continue
 
-sound.speak("Running")
+        if itemsAround[3] == 'Green':
+            world.goDirection('West')
+            haveAmmo = True
+            continue
 
-def calculateCraneHeight(height):
-    forklift.height += height
 
-def moveCrane(speed, rotations): # see how much the forklift needs to go to 0cm up to 5cm
-    robotMotors.forklift.on_for_rotations(SpeedRPM(speed), rotations)
-    height = speed / rotations
-    forklift.height += height
+            
+        if itemsAround[0] == 'Blue':
+            world.goDirection('North')
+            fork.pickObject()
+            continue
 
-def punchZombie(zombie):
-    robotMotors.leftLeg.on_for_rotations(10, 1) # aim the punch
-    robotMotors.attack.on_for_rotations(-50, 4) # punch, negative axis
-    stunZombie(zombie)
+        if itemsAround[1] == 'Blue':
+            world.goDirection('East')
+            fork.pickObject()
+            continue
 
-def shootZombie(robot, zombie):
-    robotMotors.attack.on_for_rotations(50, 4) # bullet, positive axis
-    killZombie(robot, zombie)
+        if itemsAround[2] == 'Blue':
+            world.goDirection('South')
+            fork.pickObject()
+            continue
 
-def playAlarm():
-    gameWorld.alarm = True
-    # set zombies on alarm
+        if itemsAround[3] == 'Blue':
+            world.goDirection('West')
+            fork.pickObject()
+            continue
 
-def stopAlarm():
-    gameWorld.alarm = False
-    # set zombies to default behaviour
 
-def getBikePiece(character): # character is either survivorBot or zombie
-    playAlarm()
-    character.bikePieces += 1
+        if itemsAround[0] == 'Brown':
+            world.setDirection('North')
+            if haveAmmo:
+                at.shoot()
+            else:
+                at.punch()
+            i = randint(0,2)
+            if i == 0:
+                world.goDirection('East')
+                continue
+            if i == 1:
+                world.goDirection('South')
+                continue
+            if i == 2:
+                world.goDirection('West')
+                continue
 
-def dropBikePiece(character): # character is either survivorBot or zombie
-    stopAlarm()
-    character.bikePieces -= 1
+        if itemsAround[1] == 'Brown':
+            world.setDirection('East')
+            if haveAmmo:
+                at.shoot()
+            else:
+                at.punch()
+            i = randint(0,2)
+            if i == 0:
+                world.goDirection('North')
+                continue
+            if i == 1:
+                world.goDirection('South')
+                continue
+            if i == 2:
+                world.goDirection('West')
+                continue
 
-def killRobot(robot):
-    robot.isDead = True
-    endGame()
+        if itemsAround[2] == 'Brown':
+            world.setDirection('South')
+            if haveAmmo:
+                at.shoot()
+            else:
+                at.punch()
+            i = randint(0,2)
+            if i == 0:
+                world.goDirection('North')
+                continue
+            if i == 1:
+                world.goDirection('East')
+                continue
+            if i == 2:
+                world.goDirection('West')
+                continue
 
-def killZombie(robot, zombie):
-    zombie.isDead = True
-    
-    if zombie.bikePieces:
-        robot.bikePieces += zombie.bikePieces
+        if itemsAround[3] == 'Brown':
+            world.setDirection('West')
+            if haveAmmo:
+                at.shoot()
+            else:
+                at.punch()
+            i = randint(0,2)
+            if i == 0:
+                world.goDirection('North')
+                continue
+            if i == 1:
+                world.goDirection('East')
+                continue
+            if i == 2:
+                world.goDirection('South')
+                continue
+        print('aqui')
+        i = randint(0,3)
+        if i == 0:
+            world.goDirection('North')
+            continue
+        if i == 1:
+            world.goDirection('East')
+            continue
+        if i == 2:
+            world.goDirection('South')
+            continue
+        if i == 3:
+            world.goDirection('West')
+            continue
 
-def stunZombie(zombie):
-    zombie.isStunned = True
-    zombie.turnsUnableToPlay = 2
 
-def stunHasPassed(zombie):
-    zombie.isStunned = False
+        
 
-def isBikeFixed(robot):
-    if robot.bikePieces:
-        bike.mountedPieces += robot.bikePieces
-    elif bike.mountedPieces == 2:
-        endGame()
 
-def endGame():
-    sound.speak("Victory")
-    exit(0)
-    
-robotMotors.forklift.on_for_rotations(50, 8)
-robotMotors.forklift.run_to_abs_pos
-print('ROTACOES SUBIR: ' + str(robotMotors.forklift.rotations))
-rotUp = robotMotors.forklift.rotations
 
-robotMotors.forklift.on_for_rotations(-100, 8)
 
-#robotMotors.forklift.on_for_seconds(100, 10)
-#robotMotors.forklift.on_for_seconds(-100, 10)
-
-#robotMotors.doubleJoystick.on(-1, -1, 50)
-#robotMotors.doubleWalk.on_for_rotations(100, -100, 6)
-#robotMotors.leftLeg.on_for_rotations(100, 5)
-#robotMotors.rightLeg.on_for_rotations(100, 5)
-
-sumOfDistanceCrane = 0
-
-while robotSensors.touch.is_released:
-    robotMotors.forklift.on_for_rotations(-50, 4)
-    sumOfDistanceCrane += 1
-    #print(str(sumOfDistanceCrane))
-    print('ROTACOES DESCER: ' + str(robotMotors.forklift.rotations))
-
-rotDown = robotMotors.forklift.rotations
-difDist = rotUp - rotDown
-
-print('total: ' + str(sumOfDistanceCrane))
-print('dif de distancia: ' + str(difDist))
-
-#def moveRobot():
-    # to be defined
-
-#def reconSurroundings():
-    # to be defined
-
-#def playRobot():
-    # to be defined
-
-#def playZombie():
-    # to be defined
+        

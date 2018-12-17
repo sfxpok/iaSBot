@@ -8,6 +8,20 @@ Developed with Visual Studio Code along with the extension [ev3dev-browser](http
 
 - Windows 7 64-bit
 
+### Sensors
+
+- INPUT_1: Touch sensor
+- INPUT_2: Ultrasonic sensor
+- INPUT_3: Color sensor
+- INPUT_4: Gyro sensor
+
+### Motors
+
+- OUTPUT_A: Left motor (LargeMotor)
+- OUTPUT_B: Right motor (LargeMotor)
+- OUTPUT_C: Forklift motor (LargeMotor)
+- OUTPUT_D: Attack motor (MediumMotor)
+
 Dependency: [python-ev3dev2](https://pypi.org/project/python-ev3dev2/)
 
 [ev3dev2 API documentation](https://media.readthedocs.org/pdf/python-ev3dev/ev3dev-stretch/python-ev3dev.pdf?fbclid=IwAR1HmBFEMNMhJSpXuWfiDfa1OAkgJ6_GLlFFeymIgzuSS3MQebvAMik4uUg)

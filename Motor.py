@@ -61,19 +61,34 @@ class MoveTank():
         self.speed = speed
     
     def movementDeg(self, degree):
+        gyro = GyroSensor()
+        gyro.mode = gyro.modes[1]
+        while gyro.rate != 0:
+            pass
+        gyro.mode = gyro.modes[0]
         self.engine.on_for_degrees(self.speed, self.speed, degree)
 
     def movementRot(self, rotation):
+        gyro = GyroSensor()
+        gyro.mode = gyro.modes[1]
+        while gyro.rate != 0:
+            pass
+        gyro.mode = gyro.modes[0]
         self.engine.on_for_rotations(self.speed, self.speed, rotation)
 
     def movementSec(self, seconds):
+        gyro = GyroSensor()
+        gyro.mode = gyro.modes[1]
+        while gyro.rate != 0:
+            pass
+        gyro.mode = gyro.modes[0]
         self.engine.on_for_seconds(self.speed, self.speed, seconds)
     
-    def startEngine(self):
-        self.engine.on(self.speed, self.speed)
-    
-    def stopEngine(self):
-        self.engine.off()
+    def fixPosition(self, gyro):
+        if abs(gyro.angle) > 0:
+            self.engine.on_for_rotations(5, -5, abs(gyro.angle))
+        else:
+            self.engine.on_for_rotations(-5, 5, abs(gyro.angle))
         
 
     def turnRight(self):
@@ -82,11 +97,11 @@ class MoveTank():
         while gyro.rate != 0:
             pass
         gyro.mode = gyro.modes[0]
-        self.engine.on(-self.speed, self.speed)        
+        self.engine.on(self.speed, -self.speed)        
         while abs(gyro.angle) < 75:
             pass
-        self.engine.on(-self.speed/2, self.speed/2)
-        while abs(gyro.angle) < 90:
+        self.engine.on(self.speed/2, -self.speed/4)
+        while abs(gyro.angle) < 87:
             pass
         self.engine.off()
     
@@ -96,11 +111,11 @@ class MoveTank():
         while gyro.rate != 0:
             pass
         gyro.mode = gyro.modes[0]
-        self.engine.on(self.speed, -self.speed)        
+        self.engine.on(-self.speed, self.speed)        
         while abs(gyro.angle) < 75:
             pass
-        self.engine.on(self.speed/2, -self.speed/2)
-        while abs(gyro.angle) < 90:
+        self.engine.on(-self.speed/2, self.speed/4)
+        while abs(gyro.angle) < 87:
             pass
         self.engine.off()
 
