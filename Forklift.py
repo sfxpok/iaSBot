@@ -33,11 +33,11 @@ class Forklift:
     def alarm(self):
         while self.alarmLoop:
             Sound().beep()
-            color = 1
+            """ color = 1
             if color == 1:
                 self.leds.set_color('LEFT', 'RED')
 
-                Leds.set(Leds.LEFT, brightness_pct=1, trigger="timer")
+                Leds().set(Leds.LEFT, brightness_pct=1, trigger="timer")
                 time.sleep(0.1)
                 Leds.set(Leds.LEFT, delay_on=2000)
 
@@ -52,7 +52,7 @@ class Forklift:
 
                 self.leds.set_color('LEFT', 'GREEN')
                 color = 1
-
+            """    
             time.sleep(1)
 
 

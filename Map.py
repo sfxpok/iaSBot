@@ -7,6 +7,8 @@ from ev3dev2.display import Display
 import ev3dev2.fonts as fonts
 from time import sleep
 from ev3dev2.motor import OUTPUT_A, OUTPUT_B, LargeMotor
+from ev3dev2.sound import Sound
+
 
 def checkColor():
     color = ColorSensor().color_name
@@ -20,7 +22,8 @@ class Map:
         self.posY = 1
         self.direction = self.dirCalibration()
         print(self.direction)
-        
+        Sound().speak('Direction ' + self.direction)
+
         #Sound().speak('Position locked, facing ' + self.direction)
 
     def updateScreen(self):
@@ -32,6 +35,7 @@ class Map:
         sleep(2)
         #lcd.clear()
 
+  
 
     def dirCalibration(self):
         self.dead = False
@@ -190,4 +194,5 @@ class Map:
                 if self.direction == 'South':
                     self.engine.turnRight()
 
-               
+        if direction == 'West' or direction == 'East' or direction == 'North' or direction == 'South':
+            self.direction = direction

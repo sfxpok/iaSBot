@@ -98,10 +98,10 @@ class MoveTank():
             pass
         gyro.mode = gyro.modes[0]
         self.engine.on(self.speed, -self.speed)        
-        while abs(gyro.angle) < 75:
+        while abs(gyro.angle) < 70:
             pass
         self.engine.on(self.speed/2, -self.speed/4)
-        while abs(gyro.angle) < 87:
+        while abs(gyro.angle) < 89:
             pass
         self.engine.off()
     
@@ -112,10 +112,10 @@ class MoveTank():
             pass
         gyro.mode = gyro.modes[0]
         self.engine.on(-self.speed, self.speed)        
-        while abs(gyro.angle) < 75:
+        while abs(gyro.angle) < 70:
             pass
         self.engine.on(-self.speed/2, self.speed/4)
-        while abs(gyro.angle) < 87:
+        while abs(gyro.angle) < 89:
             pass
         self.engine.off()
 
