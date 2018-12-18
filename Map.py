@@ -12,7 +12,6 @@ from ev3dev2.sound import Sound
 
 def checkColor():
     color = ColorSensor().color_name
-    # print(color)
     return color
 
 class Map:
@@ -24,8 +23,6 @@ class Map:
         print(self.direction)
         Sound().speak('Direction ' + self.direction)
 
-        #Sound().speak('Position locked, facing ' + self.direction)
-
     def updateScreen(self):
         lcd =  Display()
         updateWarning = Sound()
@@ -35,10 +32,9 @@ class Map:
         sleep(2)
         #lcd.clear()
 
-  
-
     def dirCalibration(self):
         self.dead = False
+        ColorSensor().calibrate_white()
         Thread(target=self.walking, daemon=True).start()
         firstColor = self.waitforColor()
         MoveTank().turnRight()
@@ -118,23 +114,24 @@ class Map:
             distToMoveOneSquare = (distToMoveOneSquareMotorA + distToMoveOneSquareMotorB)/5
             self.engine.movementDeg(distToMoveOneSquare)
             color = checkColor()
+            print('color: '+ color)
             self.engine.movementDeg(-distToMoveOneSquare)
             return color    
         return 'Invalid'
 
     def fullRecognition(self):
-        ### Cores dos objetos: ###
-        # Peça da mota: azul
-        # Bala: verde
-        # Zombie: cheiro nível 1 é vermelho e nível 2 é amarelo
-        # Zombie com peça da mota: castanho
+        ### Object color: ###
+        # Motorbike part: blue
+        # Ammo: Green
+        # Zombie distance: level 1 red, level 2 yellow
+        # Zombie with motorbike part: Brown
 
-        ### Sobre o array do itemsAround: ###
-        # Posição 0 do array: Objeto a norte do robô
-        # Posição 1 do array: Objeto a este do robô
-        # Posiçao 2 do array: Objeto a sul do robô
-        # Posiçao 3 do array: Objeto a oeste do robô
-        # A ordem da orientação é no sentido relógio
+        ### Positions from the array: ###
+        # Position 0: Object is North
+        # Position 1: Object is East 
+        # Position 2: Object is South
+        # Position 3: Object is Weast
+        # Orientation is clockwise direction
 
         self.itemsAround = []
         self.itemsAround.append(self.recognize('North'))

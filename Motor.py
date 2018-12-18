@@ -2,6 +2,7 @@ from ev3dev2 import motor
 from ev3dev2.sensor.lego import GyroSensor
 import threading
 
+
 class Motor:
     def __init__(self, speed=25):
         self.speed = motor.SpeedPercent(speed)
@@ -12,11 +13,11 @@ class Motor:
     def setSpeed(self, speed):
         self.speed = speed
   
+
 class LargeMotor(Motor):
     def __init__(self, output, speed=None):
         Motor.__init__(self)
         self.engine = motor.LargeMotor(output)
-        #self.position = motor.LargeMotor.position_sp
         if (speed):
             self.setSpeed(speed)
 
@@ -34,9 +35,7 @@ class LargeMotor(Motor):
     
     def motorReset(self):
         self.engine.reset
-    
-
-    
+        
 
 class MediumMotor(Motor):
     def __init__(self, output, speed=None):
@@ -44,7 +43,6 @@ class MediumMotor(Motor):
         Motor.__init__(self)
         if (speed):
             self.setSpeed(speed)
-            
 
     def movementDeg(self, degree):
         self.engine.on_for_degrees(self.speed, degree)
@@ -89,7 +87,6 @@ class MoveTank():
             self.engine.on_for_rotations(5, -5, abs(gyro.angle))
         else:
             self.engine.on_for_rotations(-5, 5, abs(gyro.angle))
-        
 
     def turnRight(self):
         gyro = GyroSensor()
@@ -100,8 +97,8 @@ class MoveTank():
         self.engine.on(self.speed, -self.speed)        
         while abs(gyro.angle) < 70:
             pass
-        self.engine.on(self.speed/2, -self.speed/4)
-        while abs(gyro.angle) < 89:
+        self.engine.on(self.speed/4, -self.speed/4)
+        while abs(gyro.angle) < 90:
             pass
         self.engine.off()
     
@@ -114,13 +111,11 @@ class MoveTank():
         self.engine.on(-self.speed, self.speed)        
         while abs(gyro.angle) < 70:
             pass
-        self.engine.on(-self.speed/2, self.speed/4)
-        while abs(gyro.angle) < 89:
+        self.engine.on(-self.speed/4, self.speed/4)
+        while abs(gyro.angle) < 90:
             pass
         self.engine.off()
 
 def teste(teste):
     MoveTank().movementDeg(teste)
-#a = MoveTank(motor.OUTPUT_A, motor.OUTPUT_B)
-#teste()
 
