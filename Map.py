@@ -19,7 +19,7 @@ class Map:
         self.engine = MoveTank()
         self.housesChecked = []
         self.posX = 1
-        self.posY = 6
+        self.posY = 1
         self.direction = self.dirCalibration()
         print(self.direction)
         Sound().speak('Direction ' + self.direction)
@@ -146,17 +146,17 @@ class Map:
         
         return self.itemsAround
 
-    def checkHouse(self, direction):
+    def checkHouse(direction):
         if direction == 'North':
-            self.housesChecked.append(str(str(self.posX)+','+str(self.posY+1)))
-        elif direction == 'East':
-            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
-        elif direction == 'South':
             self.housesChecked.append(str(str(self.posX)+','+str(self.posY-1)))
-        elif direction == 'West':
+        elif direction == 'East':
             self.housesChecked.append(str(str(self.posX-1)+','+str(self.posY)))
+        elif direction == 'South':
+            self.housesChecked.append(str(str(self.posX)+','+str(self.posY+1)))
+        elif direction == 'West':
+            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
         else:
-            self.housesChecked.append(str(str(self.posX)+','+str(self.posY)))
+            self.housesChecked.append(str(str(self.posX)+','+str(self.posY))) # ???
 
     def setDirection(self, direction):
         if self.direction != direction:
