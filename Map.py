@@ -24,6 +24,7 @@ class Map:
         Sound().speak('Direction ' + self.direction)
 
     def updateScreen(self):
+        # info no ecrã: coords do chappie; se tem bala ou não; se existe cheiro à volta do chappie; quantas peças já devolveu
         lcd =  Display()
         updateWarning = Sound()
         lcd.draw.text((10,10), "SB: (" + str(self.posX) + "," + str(self.posY) + ")", font=fonts.load('luBS14'))
