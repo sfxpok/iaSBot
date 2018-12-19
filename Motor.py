@@ -115,7 +115,3 @@ class MoveTank():
         while abs(gyro.angle) < 90:
             pass
         self.engine.off()
-
-def teste(teste):
-    MoveTank().movementDeg(teste)
-
