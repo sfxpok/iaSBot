@@ -21,7 +21,7 @@ def checkButtons():
             return True
         if button.Button().down:
             fork.stopAlarm()
-        if button.Button().backspace:
+        if button.Button().left:
             return False    
         """ if button.Button().left:
             print('Button LEFT pressed')
@@ -145,8 +145,9 @@ while True:
             if i == 2:
                 world.goDirection('South')
                 continue
-        print('aqui')
+        
         i = randint(0,3)
+        print('Trying to go: ' + str(i))
         if i == 0:
             world.goDirection('North')
             continue

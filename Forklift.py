@@ -17,7 +17,7 @@ class Forklift:
         threading.Thread(target=self.waitForSensor, daemon=True).start()
         self.calibration()
         self.maxRot = round(self.maxRot, 2)
-        self.setRot(5)
+        self.setRot(6)
         Sound().speak('Forklift, ready')
         self.leds = Leds()
 
@@ -27,36 +27,24 @@ class Forklift:
     
     def stopAlarm(self):
         self.alarmLoop = False
+        self.leds.all_off()
         self.leds.set_color('LEFT', 'GREEN')
         self.leds.set_color('RIGHT', 'GREEN')
 
     def alarm(self):
+        color = 0
         while self.alarmLoop:
-            Sound().beep()
-            color = 1
-            if color == 1:
+            #Sound().beep()
+            if color == 0:
                 self.leds.set_color('LEFT', 'RED')
-
-                Leds.set(Leds.LEFT, brightness_pct=1, trigger="timer")
-                time.sleep(0.1)
-                Leds.set(Leds.LEFT, delay_on=2000)
-
+                color = 1
+                time.sleep(1)
+            else:
                 self.leds.set_color('RIGHT', 'GREEN')
                 color = 0
-            else:
-                self.leds.set_color('RIGHT', 'RED')
-
-                Leds.set(Leds.LEFT, brightness_pct=1, trigger="timer")
-                time.sleep(0.1)
-                Leds.set(Leds.LEFT, delay_on=2000)
-
-                self.leds.set_color('LEFT', 'GREEN')
-                color = 1
-
+                time.sleep(1)
+            self.leds.all_off()   
             time.sleep(1)
-
-
-
 
     def calibration(self):
         while self.loop:
@@ -87,7 +75,7 @@ class Forklift:
 
     def objDetector(self):
         lastCurrent = self.currentRot
-        self.setRot(5)
+        self.setRot(6)
         threading.Thread(target=self.waitForSensor, daemon=True).start()
         while self.loop:
             self.currentRot -= 0.2
@@ -101,7 +89,7 @@ class Forklift:
 
         
     def pickObject(self):
-        self.setRot(5)
+        self.setRot(6)
         trys = 2
         while trys > 0:
             if self.objDetector():
