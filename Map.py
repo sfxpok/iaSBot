@@ -90,7 +90,7 @@ class Map:
             return False
         return True
 
-    def goDirection(self, direction):
+    def goDirection(self, direction):  
         if self.checkInvalidPositions(direction):
             self.setDirection(direction)
             distToMoveOneSquareMotorA = 1139
@@ -108,6 +108,11 @@ class Map:
             self.updateScreen()
     
     def recognize(self, direction):
+        #to implement 31cm = 1134
+        # 15.5 = 567
+        # 16 = 585
+        # 17 = 621
+        # 18 = 658 
         if self.checkInvalidPositions(direction):
             self.checkHouse(direction)
             self.setDirection(direction)
