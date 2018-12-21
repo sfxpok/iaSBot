@@ -17,6 +17,7 @@ def checkColor():
 class Map:
     def __init__(self):
         self.engine = MoveTank()
+        self.housesChecked = []
         self.posX = 1
         self.posY = 1
         self.direction = self.dirCalibration()
@@ -108,6 +109,7 @@ class Map:
     
     def recognize(self, direction):
         if self.checkInvalidPositions(direction):
+            self.checkHouse(direction)
             self.setDirection(direction)
             distToMoveOneSquareMotorA = 1139
             distToMoveOneSquareMotorB = 1128
@@ -143,7 +145,18 @@ class Map:
                 self.itemsAround[i] = None
         
         return self.itemsAround
-    
+
+    def checkHouse(direction):
+        if direction == 'North':
+            self.housesChecked.append(str(str(self.posX)+','+str(self.posY-1)))
+        elif direction == 'East':
+            self.housesChecked.append(str(str(self.posX-1)+','+str(self.posY)))
+        elif direction == 'South':
+            self.housesChecked.append(str(str(self.posX)+','+str(self.posY+1)))
+        elif direction == 'West':
+            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
+        else:
+            self.housesChecked.append(str(str(self.posX)+','+str(self.posY))) # ???
 
     def setDirection(self, direction):
         if self.direction != direction:
