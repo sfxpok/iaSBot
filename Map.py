@@ -20,18 +20,28 @@ class Map:
         self.housesChecked = []
         self.posX = 1
         self.posY = 1
+        self.haveAmmo = False
+        self.deliveredPieces = 0
+        self.levelOneSmell = False
+        self.levelTwoSmell = False
         self.direction = self.dirCalibration()
         print(self.direction)
         Sound().speak('Direction ' + self.direction)
 
     def updateScreen(self):
-        lcd =  Display()
+
+        # info no ecrã: coords do chappie; se tem bala ou não; se existe cheiro à volta do chappie; quantas peças já devolveu
+        lcd = Display()
         updateWarning = Sound()
-        lcd.draw.text((10,10), "SB: (" + str(self.posX) + "," + str(self.posY) + ")", font=fonts.load('luBS14'))
+        lcd.draw.text((10, 10), "Chappie: (" + str(self.posX) + "," + str(self.posY) + ")", font=fonts.load('luBS14'))
+        lcd.draw.text((10, 20), "O Chappie tem a bala?: " + str(self.haveAmmo), font=fonts.load('luBS14'))
+        lcd.draw.text((10, 30), "Peças na mota: " + str(self.deliveredPieces), font=fonts.load('luBS14'))
+        lcd.draw.text((10, 40), "Cheiro nível 1?: " + str(self.levelOneSmell), font=fonts.load('luBS14'))
+        lcd.draw.text((10, 50), "Cheiro nível 2?: " + str(self.levelTwoSmell), font=fonts.load('luBS14'))
         lcd.update()
         updateWarning.beep()
         sleep(2)
-        #lcd.clear()
+        # lcd.clear()
 
     def dirCalibration(self):
         self.dead = False
