@@ -76,13 +76,13 @@ class Map:
             pass
         self.loop = False
 
-        colorCode = []
-        for color in range(3):
-            colorCode[color] = checkColor()
-            print('Color detected: ', colorCode[color])
+        #colorCode = [0,0,0]
+        #for color in range(3):
+            #colorCode[color] = checkColor()
+            #print('Color detected: ', colorCode[color])
 
-        #color = checkColor()
-        #print('Color detected ', color)
+        color = checkColor()
+        print('Color detected ', color)
         while not self.dead:
             pass
         MoveTank().movementDeg(-self.movement)
@@ -135,16 +135,17 @@ class Map:
             distToMoveOneSquareMotorA = 1139 # para mudar
             distToMoveOneSquareMotorB = 1128 # para mudar
             distToMoveOneSquare = (distToMoveOneSquareMotorA + distToMoveOneSquareMotorB)/5 # para mudar
-            self.engine.movementDeg(distToMoveOneSquare)
+            #self.engine.movementDeg(distToMoveOneSquare)
             
-            colorCode = []
+            colorCode = [None]*3
             for color in range(3):
+                self.engine.movementDeg(distToMoveOneSquare)
                 colorCode[color] = checkColor()
-                    print('Color detected: ', colorCode[color])
+                print('Color detected: ', colorCode[color])
 
             #color = checkColor()
             #print('Color detected ', color)
-            self.engine.movementDeg(-distToMoveOneSquare)
+            self.engine.movementDeg(-distToMoveOneSquare*3)
             return colorCode    
         return 'Invalid'
 
