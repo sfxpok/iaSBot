@@ -90,7 +90,7 @@ class Map:
             return False
         return True
 
-    def goDirection(self, direction):  
+    def goDirection(self, direction):
         if self.checkInvalidPositions(direction):
             self.setDirection(direction)
             distToMoveOneSquareMotorA = 1139
@@ -123,7 +123,7 @@ class Map:
             color = checkColor()
             print('color: '+ color)
             self.engine.movementDeg(-distToMoveOneSquare)
-            return color    
+            return color
         return 'Invalid'
 
     def fullRecognition(self):
@@ -151,15 +151,15 @@ class Map:
         
         return self.itemsAround
 
-    def checkHouse(direction):
+    def checkHouse(self, direction):
         if direction == 'North':
             self.housesChecked.append(str(str(self.posX)+','+str(self.posY-1)))
         elif direction == 'East':
-            self.housesChecked.append(str(str(self.posX-1)+','+str(self.posY)))
+            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
         elif direction == 'South':
             self.housesChecked.append(str(str(self.posX)+','+str(self.posY+1)))
         elif direction == 'West':
-            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
+            self.housesChecked.append(str(str(self.posX-1)+','+str(self.posY)))
         else:
             self.housesChecked.append(str(str(self.posX)+','+str(self.posY))) # ???
 
