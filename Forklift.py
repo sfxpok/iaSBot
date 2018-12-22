@@ -96,7 +96,7 @@ class Forklift:
                 MoveTank().movementRot(-1)
                 self.setRot(1.2)
                 MoveTank().movementRot(1)
-                self.setRot(5)
+                self.setRot(6.5) # max height possible
                 self.startAlarm()
                 break
             else:
