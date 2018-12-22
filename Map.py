@@ -75,8 +75,14 @@ class Map:
         while checkColor() == 'White':
             pass
         self.loop = False
-        color = checkColor()
-        print('Color detected ', color)
+
+        colorCode = []
+        for color in range(3):
+            colorCode[color] = checkColor()
+            print('Color detected: ', colorCode[color])
+
+        #color = checkColor()
+        #print('Color detected ', color)
         while not self.dead:
             pass
         MoveTank().movementDeg(-self.movement)
@@ -126,14 +132,20 @@ class Map:
         if self.checkInvalidPositions(direction):
             self.checkHouse(direction)
             self.setDirection(direction)
-            distToMoveOneSquareMotorA = 1139
-            distToMoveOneSquareMotorB = 1128
-            distToMoveOneSquare = (distToMoveOneSquareMotorA + distToMoveOneSquareMotorB)/5
+            distToMoveOneSquareMotorA = 1139 # para mudar
+            distToMoveOneSquareMotorB = 1128 # para mudar
+            distToMoveOneSquare = (distToMoveOneSquareMotorA + distToMoveOneSquareMotorB)/5 # para mudar
             self.engine.movementDeg(distToMoveOneSquare)
-            color = checkColor()
-            print('color: '+ color)
+            
+            colorCode = []
+            for color in range(3):
+                colorCode[color] = checkColor()
+                    print('Color detected: ', colorCode[color])
+
+            #color = checkColor()
+            #print('Color detected ', color)
             self.engine.movementDeg(-distToMoveOneSquare)
-            return color    
+            return colorCode    
         return 'Invalid'
 
     def fullRecognition(self):
