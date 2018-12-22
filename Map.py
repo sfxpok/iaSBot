@@ -151,17 +151,17 @@ class Map:
         
         return self.itemsAround
 
-    def checkHouse(direction):
+    def checkHouse(self, direction):
         if direction == 'North':
             self.housesChecked.append(str(str(self.posX)+','+str(self.posY-1)))
         elif direction == 'East':
-            self.housesChecked.append(str(str(self.posX-1)+','+str(self.posY)))
+            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
         elif direction == 'South':
             self.housesChecked.append(str(str(self.posX)+','+str(self.posY+1)))
         elif direction == 'West':
-            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
+            self.housesChecked.append(str(str(self.posX-1)+','+str(self.posY)))
         else:
-            self.housesChecked.append(str(str(self.posX)+','+str(self.posY))) # ???
+            self.housesChecked.append(str(str(self.posX)+','+str(self.posY)))
 
     def setDirection(self, direction):
         if self.direction != direction:
