@@ -100,7 +100,7 @@ class Map:
             return False
         return True
 
-    def goDirection(self, direction):  
+    def goDirection(self, direction):
         if self.checkInvalidPositions(direction):
             self.setDirection(direction)
             distToMoveOneSquareMotorA = 1139
@@ -133,7 +133,7 @@ class Map:
             color = checkColor()
             print('color: '+ color)
             self.engine.movementDeg(-distToMoveOneSquare)
-            return color    
+            return color
         return 'Invalid'
 
     def fullRecognition(self):

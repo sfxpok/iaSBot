@@ -69,4 +69,4 @@ class InitDir():
         elif self.firstColor == 'Black' and self.secondColor == 'Black':
             print('East')
         elif self.firstColor == 'Black' and self.secondColor == 'Red':
-            print('South') 
+            print('South')
