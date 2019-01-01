@@ -90,18 +90,13 @@ class Forklift:
         
     def pickObject(self):
         self.setRot(6)
-        trys = 2
-        while trys > 0:
-            if self.objDetector():
-                MoveTank().movementRot(-1)
-                self.setRot(1.2)
-                MoveTank().movementRot(1)
-                self.setRot(6.5) # max height possible
-                self.startAlarm()
-                break
-            else:
-                MoveTank().movementRot(1)
-                trys -= 1
+        if self.objDetector():
+            MoveTank().movementRot(-1)
+            self.setRot(1.2)
+            MoveTank().movementRot(1)
+            self.setRot(6.5) # max height possible
+            self.startAlarm()
+       
     
     def dropObject(self):
         lastCurrent = self.currentRot
