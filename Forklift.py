@@ -17,7 +17,7 @@ class Forklift:
         threading.Thread(target=self.waitForSensor, daemon=True).start()
         self.calibration()
         self.maxRot = round(self.maxRot, 2)
-        self.setRot(6)
+        self.setRot(6.5)
         Sound().speak('Forklift, ready')
         self.leds = Leds()
 

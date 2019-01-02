@@ -61,17 +61,21 @@ class MoveTank():
     def movementDeg(self, degree, speed=0):
         targetSpeed = self.getSpeed(speed)
         self.engine.on_for_degrees(targetSpeed, targetSpeed, degree)
+        self.engine.wait_until_not_moving()
+        self.engine.wait_until_not_moving()
         self.fixPosition(0)
 
 
     def movementRot(self, rotation, speed=0):
         targetSpeed = self.getSpeed(speed)
         self.engine.on_for_rotations(targetSpeed, targetSpeed, rotation)
+        self.engine.wait_until_not_moving()
         self.fixPosition(0)
 
     def movementSec(self, seconds, speed=0):
         targetSpeed = self.getSpeed(speed)
         self.engine.on_for_seconds(targetSpeed, targetSpeed, seconds)
+        self.engine.wait_until_not_moving()
         self.fixPosition(0)
 
     def getSpeed(self, speed):
@@ -97,6 +101,8 @@ class MoveTank():
             else:
                 self.engine.on(1, -1)
         self.engine.off()
+        self.engine.wait_until_not_moving()
+
 
     def turnRight(self):
         gyro = GyroSensor()
@@ -111,6 +117,7 @@ class MoveTank():
         while abs(gyro.angle) < 90:
             pass
         self.engine.off()
+        self.engine.wait_until_not_moving()
         self.fixPosition(90)
     
     def turnLeft(self):
@@ -126,4 +133,5 @@ class MoveTank():
         while abs(gyro.angle) < 90:
             pass
         self.engine.off()
+        self.engine.wait_until_not_moving()
         self.fixPosition(-90)

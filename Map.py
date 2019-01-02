@@ -28,6 +28,7 @@ class Map:
         print(self.direction)
         Sound().speak('Direction ' + self.direction)
 
+
     def updateScreen(self):
 
         # info no ecrã: coords do chappie; se tem bala ou não; se existe cheiro à volta do chappie; quantas peças já devolveu
@@ -44,15 +45,21 @@ class Map:
         # lcd.clear()
 
     def dirCalibration(self):
-        self.dead = False
-        ColorSensor().calibrate_white()
-        Thread(target=self.walking, daemon=True).start()
+        self.engine.engine.on(20,20)
         firstColor = self.waitforColor()
-        MoveTank().turnRight()
+        self.engine.engine.off()
 
-        Thread(target=self.walking, daemon=True).start()
+        self.engine.movementDeg(-272)
+
+        self.engine.turnRight()
+
+        self.engine.engine.on(20,20)
         secondColor = self.waitforColor()
-        MoveTank().turnLeft()
+        self.engine.engine.off()
+
+        self.engine.movementDeg(-272)
+
+        self.engine.turnLeft()
 
         if firstColor == 'Red' and secondColor == 'Red':
             return('West')
@@ -63,24 +70,11 @@ class Map:
         elif firstColor == 'Black' and secondColor == 'Red':
             return('South') 
 
-    def walking(self):
-        self.loop = True
-        self.movement = 0
-        while self.loop:
-            MoveTank().movementDeg(75)
-            self.movement += 75 
-        self.dead = True
 
     def waitforColor(self):
         while checkColor() == 'White':
             pass
-        self.loop = False
-        color = checkColor()
-        print('Color detected ', color)
-        while not self.dead:
-            pass
-        MoveTank().movementDeg(-self.movement)
-        return color
+        return checkColor()
 
     def checkInvalidPositions(self, direction):
         if self.posX == 1 and direction == 'West':
@@ -117,7 +111,7 @@ class Map:
                 self.posX -= 1
             self.updateScreen()
 
-    def recognize(self):
+    def recognize(self, direction):
         ###
         # Distance between squares:
         #Motor A = 1139
@@ -128,6 +122,8 @@ class Map:
         # 17 = 621
         # 18 = 658 
         ###
+        self.setDirection(direction)
+
         ColorSensor().calibrate_white()
         a = MoveTank()
         #if self.checkInvalidPositions():
@@ -194,7 +190,7 @@ class Map:
                     self.engine.turnRight()
 
                 if self.direction == 'East':
-                    self.a.turnLeft()
+                    self.engine.turnLeft()
 
             if direction == 'South':
                 if self.direction == 'North':

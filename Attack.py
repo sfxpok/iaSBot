@@ -15,4 +15,4 @@ def shoot():
     engine = MediumMotor(OUTPUT_D, 50)
     print('Shooting')
     engine.movementDeg(362)
-    
+    #Forklif shooting cannot be defined here, it must be defined before using this move! 
