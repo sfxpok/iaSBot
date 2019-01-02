@@ -57,7 +57,7 @@ def checkButtons():
 
 
 # Main loop:
-while True:
+""" while True:
     if checkButtons():
         itemsAround = world.fullRecognition()  # Get all objets arround me
 
@@ -182,3 +182,5 @@ while True:
         if i == 3:
             world.goDirection('West')
             continue
+ """
+

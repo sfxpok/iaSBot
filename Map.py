@@ -116,25 +116,35 @@ class Map:
             elif direction == 'West':
                 self.posX -= 1
             self.updateScreen()
-    
-    def recognize(self, direction):
+
+    def recognize(self):
+        ###
+        # Distance between squares:
+        #Motor A = 1139
+        #Motor B = 1128
         #to implement 31cm = 1134
         # 15.5 = 567
         # 16 = 585
         # 17 = 621
         # 18 = 658 
-        if self.checkInvalidPositions(direction):
-            self.checkHouse(direction)
-            self.setDirection(direction)
-            distToMoveOneSquareMotorA = 1139
-            distToMoveOneSquareMotorB = 1128
-            distToMoveOneSquare = (distToMoveOneSquareMotorA + distToMoveOneSquareMotorB)/5
-            self.engine.movementDeg(distToMoveOneSquare)
-            color = checkColor()
-            print('color: '+ color)
-            self.engine.movementDeg(-distToMoveOneSquare)
-            return color
-        return 'Invalid'
+        ###
+        ColorSensor().calibrate_white()
+        a = MoveTank()
+        #if self.checkInvalidPositions():
+        a.engine.on(20,20)
+        while ColorSensor().color_name != 'Black':
+            pass
+        a.engine.off()
+        color = [None] * 3
+        a.movementDeg(91)
+        color[0] = checkColor()
+        a.movementDeg(182)
+        color[1] = checkColor()
+        a.movementDeg(182)
+        color[2] = checkColor()
+
+        a.movementDeg(-727)
+        return color    
 
     def fullRecognition(self):
         ### Object color: ###
@@ -184,7 +194,7 @@ class Map:
                     self.engine.turnRight()
 
                 if self.direction == 'East':
-                    self.engine.turnLeft()
+                    self.a.turnLeft()
 
             if direction == 'South':
                 if self.direction == 'North':

@@ -33,21 +33,27 @@ def listActions():
         search()
         scout()
         if nextToZombie():
-            attack(zombie_postion) 
+            attack(zombie_position) 
     if perigo == 2:
         scout()
         if nextToZombie():
-            attack(zombie_postion)
+            attack(zombie_position)
             search()
     if perigo == 3:
         scout()
-        attack(zombie_postion)
+        attack(zombie_position)
         search()
     if perigo == 4:
         scout()
-        attack(zombie_postion)
+        attack(zombie_position)
         search()
 
+def attack(zombie_position):
+    setDirection(zombie_position)
+    if bullet:
+        shoot()
+    else:
+        punch()
 
 def nextToZombie():
     return (existZombie(curentX+1,currentY+1) or
@@ -55,11 +61,14 @@ def nextToZombie():
         existZombie(curentX-1,currentY+1) or
         existZombie(curentX-1,currentY-1))
 
+def existZombie(targetX, targetY):
+    
+
 def addItemsToValues(itemsAround=None):
     # bulletValue = -10
     # pieceValue = -15
     # checkedHouseValue = 1 Acrescentar depois de movimento
-    # ZombieValue = 20
+    # ZombieValue = 40
     # danger1Value = 1
     # danger2Value = 2
     # danger3Value = 3
@@ -82,8 +91,8 @@ def addItemsToValues(itemsAround=None):
     }
     zombieValues = {
         'White': 0,
-        'Red': 20,
-        'Brown': 20,
+        'Red': 40,
+        'Brown': 40,
     }
     pieceValues = {
         'White': 0,
@@ -107,15 +116,15 @@ def addItemsToValues(itemsAround=None):
         addValues.append(colorsValues)
     
     return addValues
-
+    
 
 def nextHouse(itemsAround=None):
     addValues = addItemsToValues(itemsAround)
 
-    north = realValuesMap[currentX][currentY-1] + heurValueMap[currentX][currentY-1]+addValues[1]
+    north = realValuesMap[currentX][currentY-1] + heurValueMap[currentX][currentY-1]+addValues[0]
     east = realValuesMap[currentX+1][currentY] + heurValueMap[currentX+1][currentY]+addValues[1]
-    south = realValuesMap[currentX][currentY+1] + heurValueMap[currentX][currentY+1]+addValues[1]
-    west = realValuesMap[currentX-1][currentY] + heurValueMap[currentX-1][currentY]+addValues[1]
+    south = realValuesMap[currentX][currentY+1] + heurValueMap[currentX][currentY+1]+addValues[2]
+    west = realValuesMap[currentX-1][currentY] + heurValueMap[currentX-1][currentY]+addValues[3]
 
     min = north
     targetHouse = 'North'
