@@ -1,3 +1,5 @@
+# search() - pesquisa?
+# scout() - reconhecimento das zonas à volta do chappie
 
 gameMap = [[None for col in range(6)] for row in range(6)] # empty matrix of size 6x6
 
@@ -15,24 +17,6 @@ heurValueMap = [[30,6,6,6,6,30],
                 [4,2,2,2,2,4],
                 [30,6,6,6,6,0]]
 
-smellValues = {
-    'Green': 0,
-    'Yellow': danger1Value,
-    'Red': danger2Value,
-    'Blue': danger3Value,
-    'Brown': danger4Value
-}
-zombieValues = {
-    'Green': 0,
-    'Yellow': ZombieValue,
-    'Red': ZombieValue,
-}
-pieceValues = {
-    'Green': 0,
-    'Yellow': pieceValue,
-    'Red': bulletValue
-}
-
 bulletValue = -10
 pieceValue = -15
 checkedHouseValue = 1
@@ -41,6 +25,24 @@ danger1Value = 1
 danger2Value = 2
 danger3Value = 3
 danger4Value = 4
+
+smellValues = {
+    'Green': 0, # there is no danger
+    'Yellow': danger1Value,
+    'Red': danger2Value,
+    'Blue': danger3Value,
+    'Brown': danger4Value
+}
+zombieValues = {
+    'Green': 0, # there is no zombie
+    'Yellow': ZombieValue,
+    'Red': ZombieValue,
+}
+pieceValues = {
+    'Green': 0, # there are no pieces
+    'Yellow': pieceValue,
+    'Red': bulletValue
+}
 
 lastTurnSmell = 0
 
@@ -88,14 +90,11 @@ def whereZombie(itemsAround=0):
     
     return arrayZombiesDirections
 
-
 def saveSmell(colorsValues):
     #colorsValues[0]-->SmellNorth
     #colorsValues[1]-->SmellEast
     #colorsValues[2]-->SmellSouth
     #colorsValues[3]-->SmellWest
-
-    
 
 def addItemsToValues(itemsAround=None):
 
@@ -124,7 +123,6 @@ def addItemsToValues(itemsAround=None):
     
     return addValues
     
-
 def bestNextHouse(itemsAround=None):
     addValues = addItemsToValues(itemsAround)
 
@@ -133,7 +131,7 @@ def bestNextHouse(itemsAround=None):
     south = realValuesMap[currentX][currentY+1] + heurValueMap[currentX][currentY+1]+addValues[2]
     west = realValuesMap[currentX-1][currentY] + heurValueMap[currentX-1][currentY]+addValues[3]
 
-    min = north
+    min = north # min is the shortest path
     targetHouse = 'North'
 
     if min > east:
