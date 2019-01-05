@@ -1,5 +1,5 @@
 # search() - pesquisa?
-# scout() - reconhecimento das zonas à volta do chappie
+# scout() - fullRecognize()
 
 gameMap = [[None for col in range(6)] for row in range(6)] # empty matrix of size 6x6
 
@@ -17,6 +17,8 @@ heurValueMap = [[30,6,6,6,6,30],
                 [4,2,2,2,2,4],
                 [30,6,6,6,6,0]]
 
+# used values to calculate real/heur
+# values during gameplay
 bulletValue = -10
 pieceValue = -15
 checkedHouseValue = 1
@@ -35,8 +37,8 @@ smellValues = {
 }
 zombieValues = {
     'Green': 0, # there is no zombie
-    'Yellow': ZombieValue,
-    'Red': ZombieValue,
+    'Yellow': ZombieValue, # 2 squares of distance
+    'Red': ZombieValue, # 1 square of distance
 }
 pieceValues = {
     'Green': 0, # there are no pieces

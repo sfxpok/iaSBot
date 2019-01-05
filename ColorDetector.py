@@ -28,13 +28,15 @@ class ColorDetector():
         if (rgb[0] > 200):
             if (rgb[1] > 180):
                 return 'White'
+            elif (rgb[1] < 50):
+                return 'Red'
             else:
                 return 'Yellow'
         
         if (rgb[0] > 100):
            return 'Red'
 
-        if (rgb[1] > 90 and rgb[2] > 90):
+        if (rgb[1] > 85 and rgb[2] > 50):
             return 'Blue'
 
         if (rgb[1] > 100 and rgb[2] < 50):
