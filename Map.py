@@ -1,18 +1,17 @@
 #!/usr/bin/env python3
 from threading import Thread
 from Motor import MoveTank
-from ev3dev2.sensor.lego import ColorSensor
 from ev3dev2.sound import Sound
 from ev3dev2.display import Display
 import ev3dev2.fonts as fonts
 from time import sleep
 from ev3dev2.motor import OUTPUT_A, OUTPUT_B, LargeMotor
 from ev3dev2.sound import Sound
+from ColorDetector import *
 
 
 def checkColor():
-    color = ColorSensor().color_name
-    return color
+    return ColorDetector().getColor()
 
 class Map:
     def __init__(self):
@@ -124,11 +123,10 @@ class Map:
         ###
         self.setDirection(direction)
 
-        ColorSensor().calibrate_white()
         a = MoveTank()
         #if self.checkInvalidPositions():
         a.engine.on(20,20)
-        while ColorSensor().color_name != 'Black':
+        while checkColor() != 'Black':
             pass
         a.engine.off()
         color = [None] * 3
