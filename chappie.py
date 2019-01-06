@@ -9,11 +9,35 @@ from Forklift import Forklift
 from Map import Map
 import Attack as at
 
-#Variable initialization:
-fork = Forklift()
+###
+from ev3dev2.sound import Sound
+from ev3dev2.display import Display
+import ev3dev2.fonts as fonts
+from time import sleep
+###
+
+# Variable initialization:
+#fork = Forklift()
 world = Map()
 haveAmmo = False
-#Definitions:
+deliveredPieces = 0
+posX = 1
+posY = 1
+# Definitions:
+
+def updateScreen():
+
+    # info no ecrã: coords do chappie; se tem bala ou não; se existe cheiro à volta do chappie; quantas peças já devolveu
+    lcd = Display()
+    updateWarning = Sound()
+    lcd.draw.text((10, 10), "SB: (" + str(posX) + "," +
+                    str(posY) + ")", font=fonts.load('luBS14'))
+    lcd.draw.text((10, 20), haveAmmo, font=fonts.load('luBS14'))
+    lcd.draw.text((10, 30), deliveredPieces, font=fonts.load('luBS14'))
+    lcd.update()
+    updateWarning.beep()
+    sleep(2)
+    # lcd.clear()
 
 def checkButtons():
     while True:
@@ -22,7 +46,7 @@ def checkButtons():
         if button.Button().down:
             fork.stopAlarm()
         if button.Button().left:
-            return False    
+            return False
         """ if button.Button().left:
             print('Button LEFT pressed')
         if button.Button().right:
@@ -31,11 +55,19 @@ def checkButtons():
             print('Button ENTER pressed')
         """
 
-#Main loop:
 while True:
+    #if checkButtons():
+    world.listActions()
+    Sound().beep()
+    Sound().beep()
+    Sound().beep()
+
+
+# Main loop:
+""" while True:
     if checkButtons():
-        itemsAround = world.fullRecognition()   #Get all objets arround me
-        
+        itemsAround = world.fullRecognition()  # Get all objets arround me
+
         if itemsAround[0] == 'Green':
             world.goDirection('North')
             haveAmmo = True
@@ -55,8 +87,6 @@ while True:
             haveAmmo = True
             continue
 
-
-            
         if itemsAround[0] == 'Blue':
             world.goDirection('North')
             fork.pickObject()
@@ -77,14 +107,13 @@ while True:
             fork.pickObject()
             continue
 
-
         if itemsAround[0] == 'Brown':
             world.setDirection('North')
             if haveAmmo:
                 at.shoot()
             else:
                 at.punch()
-            i = randint(0,2)
+            i = randint(0, 2)
             if i == 0:
                 world.goDirection('East')
                 continue
@@ -101,7 +130,7 @@ while True:
                 at.shoot()
             else:
                 at.punch()
-            i = randint(0,2)
+            i = randint(0, 2)
             if i == 0:
                 world.goDirection('North')
                 continue
@@ -118,7 +147,7 @@ while True:
                 at.shoot()
             else:
                 at.punch()
-            i = randint(0,2)
+            i = randint(0, 2)
             if i == 0:
                 world.goDirection('North')
                 continue
@@ -135,7 +164,7 @@ while True:
                 at.shoot()
             else:
                 at.punch()
-            i = randint(0,2)
+            i = randint(0, 2)
             if i == 0:
                 world.goDirection('North')
                 continue
@@ -145,8 +174,8 @@ while True:
             if i == 2:
                 world.goDirection('South')
                 continue
-        
-        i = randint(0,3)
+
+        i = randint(0, 3)
         print('Trying to go: ' + str(i))
         if i == 0:
             world.goDirection('North')
@@ -160,11 +189,5 @@ while True:
         if i == 3:
             world.goDirection('West')
             continue
+ """
 
-
-        
-
-
-
-
-        

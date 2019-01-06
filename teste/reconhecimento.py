@@ -6,7 +6,7 @@ def checkColor():
     color = ColorSensor().color_name
     return color
 
-def recognize():
+def recognize(): #done
         ###
         # Distance between squares:
         #Motor A = 1139
@@ -20,14 +20,18 @@ def recognize():
         ColorSensor().calibrate_white()
         a = MoveTank()
         #if self.checkInvalidPositions():
-        a.movementDeg(585)
-        a.speed = 5
-        color = [None]*3
-        for i in range(3):
-            a.movementDeg(130)
-            color[i] = checkColor()
-            print('color: ' + str(i) + ' '+ color[i])
-        a.speed = 25
-        a.movementDeg(-975)
+        a.engine.on(20,20)
+        while ColorSensor().color_name != 'Black':
+            pass
+        a.engine.off()
+        color = [None] * 3
+        a.movementDeg(91)
+        color[0] = checkColor()
+        a.movementDeg(182)
+        color[1] = checkColor()
+        a.movementDeg(182)
+        color[2] = checkColor()
+
+        a.movementDeg(-727)
         return color    
 

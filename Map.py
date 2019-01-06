@@ -36,8 +36,7 @@ class Map:
                 [8,7,6,5,4,3],
                 [7,6,5,4,3,2],
                 [6,5,4,3,2,1],
-                [5,4,3,2,1,0]]
-              
+                [5,4,3,2,1,0]] 
         self.heurValueMap = [
                 [25,3,6,6,6,30],
                 [4,2,2,2,2,4],
@@ -98,17 +97,12 @@ class Map:
         self.engine.engine.on(20,20)
         firstColor = self.waitforColor()
         self.engine.engine.off()
-
         self.engine.movementDeg(-272)
-
         self.engine.turnRight()
-
         self.engine.engine.on(20,20)
         secondColor = self.waitforColor()
         self.engine.engine.off()
-
         self.engine.movementDeg(-272)
-
         self.engine.turnLeft()
 
         if firstColor == 'Red' and secondColor == 'Red':
@@ -119,7 +113,6 @@ class Map:
             return('East')
         elif firstColor == 'Black' and secondColor == 'Red':
             return('South') 
-
 
     def waitforColor(self):
         while checkColor() == 'White':
@@ -175,6 +168,7 @@ class Map:
         ###
         
         if self.checkInvalidPositions(direction):
+            #self.checkHouse(direction)
             self.addHeurAfterRecog(direction)
             self.setDirection(direction)
             self.engine.engine.on(20,20)
@@ -191,9 +185,7 @@ class Map:
             self.engine.movementDeg(-727)
             return color 
         return 'Invalid'
-
-
-
+      
     def addHeurAfterRecog(self,direction):
 
         self.heurValueMap[self.posX][self.posY]+=1
@@ -214,13 +206,6 @@ class Map:
             if ((self.posX-1),(self.posY)) not in self.housesChecked:
                 self.housesChecked.append(((self.posX-1),(self.posY)))
                 self.heurValueMap[self.posX-2][self.posY-1]+=1
-
-
-
-
-        
-
-           
 
     def fullRecognition(self):
         ### Object color: ###
@@ -295,11 +280,7 @@ class Map:
 
         if direction == 'West' or direction == 'East' or direction == 'North' or direction == 'South':
             self.direction = direction
-
-
-
-
-
+            
     #Lista da accoes que o robo deve fazer por turno dependendo do cheiro na sua casa no ultimo turno
     def listActions(self):
         if self.currentPieces == 2:
@@ -408,37 +389,7 @@ class Map:
 
     #Adiciona os valores heuristicos dos items as casas adjacentes e calcula a casa com menor valor
     def bestNextHouse(self,itemsAround=None):
-
-        addValues = self.addItemsToValues(itemsAround)
-
-        if self.posY != 1:
-            north = self.realValuesMap[self.posX-1][self.posY-2] + self.heurValueMap[self.posX-1][self.posY-2]+addValues[0]
-        else:
-            north = 40
-        if self.posX != 6:
-            east = self.realValuesMap[self.posX][self.posY-1] + self.heurValueMap[self.posX][self.posY-1]+addValues[1]
-        else:
-            east = 40
-        if self.posY != 6:
-            south = self.realValuesMap[self.posX-1][self.posY] + self.heurValueMap[self.posX-1][self.posY]+addValues[2]
-        else:
-            south = 40
-        if self.posX != 1:
-            west = self.realValuesMap[self.posX-2][self.posY-1] + self.heurValueMap[self.posX-2][self.posY-1]+addValues[3]
-        else:
-            west = 40
-
-        print('North value: ', str(north))
-        print('East value: ', str(east))
-        print('South value: ', str(south))
-        print('West value: ', str(west))
-
-        min = north # min is the shortest path
         direction = 0
-        targetHouse = 'North'
-
-        if min > east:
-            min = east
             direction = 1
             targetHouse = 'East'
         if min > south:
@@ -461,7 +412,6 @@ class Map:
             elif itemsAround[direction][2] == 'Red':
                 #FAZER SOM DE CARREGAR BALA!========================================================================
                 self.haveAmmo = True
-
         return targetHouse
 
     #Calcula a casa para onde deve se movimentar usando a heuristica e movesse para la
