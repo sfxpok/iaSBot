@@ -9,7 +9,7 @@ from Motor import MoveTank
 import time
 import threading
 
-class Forklift:
+class Fork:
     def __init__(self):
         self.fork = LargeMotor(OUTPUT_C)
         self.fork.movementRot(7)

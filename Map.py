@@ -9,15 +9,16 @@ from ev3dev2.motor import OUTPUT_A, OUTPUT_B, LargeMotor
 from ev3dev2.sound import Sound
 from ColorDetector import ColorDetector
 from Attack import punch, shoot
-from Forklist import Forklift
+from Forklift import Fork
+
 
 def checkColor():
     return ColorDetector().getColor()
 
-class Map:
+class GameMap:
     def __init__(self):
         self.engine = MoveTank()
-        self.forkL = ForkLift()
+        self.forkL = Fork()
         self.housesChecked = [(1,1)]
         self.posX = 1
         self.posY = 1
@@ -36,7 +37,8 @@ class Map:
                 [8,7,6,5,4,3],
                 [7,6,5,4,3,2],
                 [6,5,4,3,2,1],
-                [5,4,3,2,1,0]] 
+                [5,4,3,2,1,0]]
+              
         self.heurValueMap = [
                 [25,3,6,6,6,30],
                 [4,2,2,2,2,4],
@@ -97,12 +99,17 @@ class Map:
         self.engine.engine.on(20,20)
         firstColor = self.waitforColor()
         self.engine.engine.off()
+
         self.engine.movementDeg(-272)
+
         self.engine.turnRight()
+
         self.engine.engine.on(20,20)
         secondColor = self.waitforColor()
         self.engine.engine.off()
+
         self.engine.movementDeg(-272)
+
         self.engine.turnLeft()
 
         if firstColor == 'Red' and secondColor == 'Red':
@@ -113,6 +120,7 @@ class Map:
             return('East')
         elif firstColor == 'Black' and secondColor == 'Red':
             return('South') 
+
 
     def waitforColor(self):
         while checkColor() == 'White':
@@ -168,7 +176,6 @@ class Map:
         ###
         
         if self.checkInvalidPositions(direction):
-            #self.checkHouse(direction)
             self.addHeurAfterRecog(direction)
             self.setDirection(direction)
             self.engine.engine.on(20,20)
@@ -185,10 +192,10 @@ class Map:
             self.engine.movementDeg(-727)
             return color 
         return 'Invalid'
-      
-    def addHeurAfterRecog(self,direction):
 
-        self.heurValueMap[self.posX][self.posY]+=1
+
+
+    def addHeurAfterRecog(self,direction):
 
         if direction == 'North':
             if ((self.posX),(self.posY-1)) not in self.housesChecked:
@@ -206,6 +213,13 @@ class Map:
             if ((self.posX-1),(self.posY)) not in self.housesChecked:
                 self.housesChecked.append(((self.posX-1),(self.posY)))
                 self.heurValueMap[self.posX-2][self.posY-1]+=1
+
+
+
+
+        
+
+           
 
     def fullRecognition(self):
         ### Object color: ###
@@ -226,9 +240,42 @@ class Map:
         self.itemsAround.append(self.recognize('East'))
         self.itemsAround.append(self.recognize('South'))
         self.itemsAround.append(self.recognize('West'))
-        for i in range(3):
-            if self.itemsAround[i] == 'White' or self.itemsAround[i] == 'Black':
-                self.itemsAround[i] = None
+        print('Colors: ',str(self.itemsAround))
+        for i in range(4):
+            if self.itemsAround[i] == 'Invalid':
+                self.itemsAround[i] = ['White','White','White']
+            for j in range(3):
+                if self.itemsAround[i][j] == 'Black':
+                    self.itemsAround[i][j] = 'White'
+        print('Colors: ',str(self.itemsAround))
+
+        smellsValues = []
+        if self.itemsAround[0][0] != 'White':
+            smellsValues.append(self.smellValues[self.itemsAround[0][0]])
+        else:
+            smellsValues.append(0)
+        if self.itemsAround[1][0] != 'White':
+            smellsValues.append(self.smellValues[self.itemsAround[1][0]])
+        else:
+            smellsValues.append(0)
+        if self.itemsAround[2][0] != 'White':
+            smellsValues.append(self.smellValues[self.itemsAround[2][0]])
+        else:
+            smellsValues.append(0)
+        if self.itemsAround[3][0] != 'White':
+            smellsValues.append(self.smellValues[self.itemsAround[3][0]])
+        else:
+            smellsValues.append(0)
+        self.lastTurnSmell = self.saveSmell(smellsValues)
+
+        self.heurValueMap[self.posX-1][self.posY-1]+=1
+
+        print('Heuristic Map: ',str(self.heurValueMap[5]))
+        print('               ',str(self.heurValueMap[4]))
+        print('               ',str(self.heurValueMap[3]))
+        print('               ',str(self.heurValueMap[2]))
+        print('               ',str(self.heurValueMap[1]))
+        print('               ',str(self.heurValueMap[0]))
         
         return self.itemsAround
 
@@ -280,7 +327,11 @@ class Map:
 
         if direction == 'West' or direction == 'East' or direction == 'North' or direction == 'South':
             self.direction = direction
-            
+
+
+
+
+
     #Lista da accoes que o robo deve fazer por turno dependendo do cheiro na sua casa no ultimo turno
     def listActions(self):
         if self.currentPieces == 2:
@@ -289,19 +340,21 @@ class Map:
                     self.deliveredPieces+=2
                     self.currentPieces-=2
                     print('Victory!')
-                    checkButton() #Inserir funcao de aguardar por botao=================================================================
+                    return True
         if self.lastTurnSmell == 0:
             self.search()
             colorArray = self.fullRecognition()
             zombiesDirections = self.whereZombie(colorArray)
             if zombiesDirections[0] != [] or zombiesDirections[1] != []: # are there zombies nearby?
                 self.attack(zombiesDirections)
+            return False
         else:
             colorArray = self.fullRecognition()
             zombiesDirections = self.whereZombie(colorArray)
             if zombiesDirections[0] != [] or zombiesDirections[1] != []: # are there zombies nearby?
                 self.attack(zombiesDirections)
             self.search(colorArray)
+            return False
 
     #Attaque do robo. Se ele tiver a bala ele dispara, senao ele da o ataque de machete
     def attack(self,zombiesDirections):
@@ -333,7 +386,7 @@ class Map:
 
         for i in range(4):
             direction = directions[i]
-            zombieColor = itemsAround[direction][1]
+            zombieColor = itemsAround[i][1]
             if zombieColor == 'Yellow':
                 arrayZombiesDirections[0].append(direction)
             elif zombieColor == 'Red':
@@ -345,51 +398,79 @@ class Map:
         return arrayZombiesDirections
 
     #Funcao que calcula o cheiro na sua casa usando o cheiro de casas adjacentes
-    def saveSmell(self,colorsValues):
-        #colorsValues[0]-->SmellNorth
-        #colorsValues[1]-->SmellEast
-        #colorsValues[2]-->SmellSouth
-        #colorsValues[3]-->SmellWest
+    def saveSmell(self,smellsValues):
+        #smellsValues[0]-->SmellNorth
+        #smellsValues[1]-->SmellEast
+        #smellsValues[2]-->SmellSouth
+        #smellsValues[3]-->SmellWest
 
-        if ((colorsValues[0] >= 2 and colorsValues[1] >= 2) or
-            (colorsValues[1] >= 2 and colorsValues[2] >= 2) or
-            (colorsValues[2] >= 2 and colorsValues[3] >= 2) or
-            (colorsValues[3] >= 2 and colorsValues[0] >= 2)):
+        if ((smellsValues[0] >= 2 and smellsValues[1] >= 2) or
+            (smellsValues[1] >= 2 and smellsValues[2] >= 2) or
+            (smellsValues[2] >= 2 and smellsValues[3] >= 2) or
+            (smellsValues[3] >= 2 and smellsValues[0] >= 2)):
             return 2    #Aqui o valor nao interessa, o importante e que nao seja 0
         else:
             return 0
 
     #Devolve um array com os valores heuristicos correspondentes
-    def addItemsToValues(self,itemsAround=None):
-
-        if itemsAround == None:
-            return [0,0,0,0]
+    def addItemsToValues(self,itemsAround=[0,0,0,0]):
 
         counter = 1
         addValues = []
-        colorsValues = []
 
-        for direction in itemsAround:
-            for color in direction:
-                directionValue = 0
-                if counter == 1:
-                    colorValue = self.smellValues[color]
-                    directionValue += colorValue
-                    colorsValues.append(colorValue)
-                elif counter == 2:
-                    directionValue += self.zombieValues[color]
-                elif counter == 3:
-                    directionValue += self.zombieValues[color]
-            counter += 1
-            addValues.append(directionValue)
-
-        self.lastTurnSmell = self.saveSmell(colorsValues)
+        if itemsAround != [0,0,0,0]:
+            for direction in itemsAround:
+                for color in direction:
+                    directionValue = 0
+                    if counter == 1:
+                        directionValue += self.smellValues[color]
+                    elif counter == 2:
+                        directionValue += self.zombieValues[color]
+                    elif counter == 3:
+                        directionValue += self.zombieValues[color]
+                counter += 1
+                addValues.append(directionValue)
+        else:
+            addValues = [0,0,0,0]
         
         return addValues
 
     #Adiciona os valores heuristicos dos items as casas adjacentes e calcula a casa com menor valor
     def bestNextHouse(self,itemsAround=None):
+
+        if itemsAround == None:
+            itemsAround = [0,0,0,0]
+
+        addValues = self.addItemsToValues(itemsAround)
+
+        if self.posY != 1:
+            north = self.realValuesMap[self.posX-1][self.posY-2] + self.heurValueMap[self.posX-1][self.posY-2]+addValues[0]
+        else:
+            north = 40
+        if self.posX != 6:
+            east = self.realValuesMap[self.posX][self.posY-1] + self.heurValueMap[self.posX][self.posY-1]+addValues[1]
+        else:
+            east = 40
+        if self.posY != 6:
+            south = self.realValuesMap[self.posX-1][self.posY] + self.heurValueMap[self.posX-1][self.posY]+addValues[2]
+        else:
+            south = 40
+        if self.posX != 1:
+            west = self.realValuesMap[self.posX-2][self.posY-1] + self.heurValueMap[self.posX-2][self.posY-1]+addValues[3]
+        else:
+            west = 40
+
+        print('North value: ', str(north))
+        print('East value: ', str(east))
+        print('South value: ', str(south))
+        print('West value: ', str(west))
+
+        min = north # min is the shortest path
         direction = 0
+        targetHouse = 'North'
+
+        if min > east:
+            min = east
             direction = 1
             targetHouse = 'East'
         if min > south:
@@ -401,17 +482,23 @@ class Map:
             direction = 3
             targetHouse = 'West'
         
-        if itemsAround[direction][2] != 'Green' and itemsAround[direction][1] == 'Green':
-            if itemsAround[direction][2] == 'Yellow':
-                self.pickObject = True
-                self.currentPieces+=1
-                if self.currentPieces == 2:
-                    for i in range(6)+1:
-                        for j in range(6)+1:
-                            self.heurValueMap[i][j]=0
-            elif itemsAround[direction][2] == 'Red':
-                #FAZER SOM DE CARREGAR BALA!========================================================================
-                self.haveAmmo = True
+        if itemsAround != [0,0,0,0]:
+            if itemsAround[direction][2] != 'Green' and itemsAround[direction][1] == 'Green':
+                if itemsAround[direction][2] == 'Yellow':
+                    self.pickObject = True
+                    self.currentPieces+=1
+                    if self.currentPieces == 2:
+                        for i in range(6)+1:
+                            for j in range(6)+1:
+                                self.heurValueMap[i][j]=0
+
+                        self.heurValueMap[1][1]=30
+                        self.heurValueMap[1][6]=30
+                        self.heurValueMap[6][1]=30
+                elif itemsAround[direction][2] == 'Red':
+                    #FAZER SOM DE CARREGAR BALA!========================================================================
+                    self.haveAmmo = True
+                
         return targetHouse
 
     #Calcula a casa para onde deve se movimentar usando a heuristica e movesse para la
