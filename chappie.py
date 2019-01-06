@@ -17,7 +17,7 @@ from time import sleep
 ###
 
 # Variable initialization:
-fork = Forklift()
+#fork = Forklift()
 world = Map()
 haveAmmo = False
 deliveredPieces = 0
@@ -54,6 +54,13 @@ def checkButtons():
         if button.Button().enter:
             print('Button ENTER pressed')
         """
+
+while True:
+    #if checkButtons():
+    world.listActions()
+    Sound().beep()
+    Sound().beep()
+    Sound().beep()
 
 
 # Main loop:
