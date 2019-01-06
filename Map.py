@@ -18,7 +18,7 @@ class Map:
     def __init__(self):
         self.engine = MoveTank()
         self.forkL = ForkLift()
-        self.housesChecked = []
+        self.housesChecked = [(1,1)]
         self.posX = 1
         self.posY = 1
         self.haveAmmo = False
@@ -36,15 +36,14 @@ class Map:
                 [8,7,6,5,4,3],
                 [7,6,5,4,3,2],
                 [6,5,4,3,2,1],
-                [5,4,3,2,1,0]]
-
+                [5,4,3,2,1,0]] 
         self.heurValueMap = [
-                [30,3,5,6,6,30],
+                [25,3,6,6,6,30],
                 [4,2,2,2,2,4],
                 [4,2,3,3,2,4],
                 [4,2,3,3,2,4],
                 [4,2,2,2,2,4],
-                [30,6,6,5,4,0]] 
+                [30,6,6,6,5,30]] 
 
         self.bulletValue = -10
         self.pieceValue = -15
@@ -77,6 +76,7 @@ class Map:
 
         self.lastTurnSmell = 0
         self.foundZombie = False
+        self.pickObject = False
 
     def updateScreen(self):
 
@@ -97,17 +97,12 @@ class Map:
         self.engine.engine.on(20,20)
         firstColor = self.waitforColor()
         self.engine.engine.off()
-
         self.engine.movementDeg(-272)
-
         self.engine.turnRight()
-
         self.engine.engine.on(20,20)
         secondColor = self.waitforColor()
         self.engine.engine.off()
-
         self.engine.movementDeg(-272)
-
         self.engine.turnLeft()
 
         if firstColor == 'Red' and secondColor == 'Red':
@@ -118,7 +113,6 @@ class Map:
             return('East')
         elif firstColor == 'Black' and secondColor == 'Red':
             return('South') 
-
 
     def waitforColor(self):
         while checkColor() == 'White':
@@ -191,24 +185,27 @@ class Map:
             self.engine.movementDeg(-727)
             return color 
         return 'Invalid'
-
+      
     def addHeurAfterRecog(self,direction):
 
+        self.heurValueMap[self.posX][self.posY]+=1
+
         if direction == 'North':
-            self.heurValueMap[self.posX-1][self.posY-2]+=1
+            if ((self.posX),(self.posY-1)) not in self.housesChecked:
+                self.housesChecked.append(((self.posX),(self.posY-1)))
+                self.heurValueMap[self.posX-1][self.posY-2]+=1
         elif direction == 'East':
-            self.heurValueMap[self.posX][self.posY-1]+=1
+            if ((self.posX+1),(self.posY)) not in self.housesChecked:
+                self.housesChecked.append(((self.posX+1),(self.posY)))
+                self.heurValueMap[self.posX][self.posY-1]+=1
         elif direction == 'South':
-            self.heurValueMap[self.posX-1][self.posY]+=1
+            if ((self.posX),(self.posY+1)) not in self.housesChecked:
+                self.housesChecked.append(((self.posX),(self.posY+1)))
+                self.heurValueMap[self.posX-1][self.posY]+=1
         elif direction == 'West':
-            self.heurValueMap[self.posX-2][self.posY-1]+=1
-
-
-
-
-        
-
-           
+            if ((self.posX-1),(self.posY)) not in self.housesChecked:
+                self.housesChecked.append(((self.posX-1),(self.posY)))
+                self.heurValueMap[self.posX-2][self.posY-1]+=1
 
     def fullRecognition(self):
         ### Object color: ###
@@ -234,18 +231,6 @@ class Map:
                 self.itemsAround[i] = None
         
         return self.itemsAround
-
-    def checkHouse(self, direction):
-        if direction == 'North':
-            self.housesChecked.append(str(str(self.posX)+','+str(self.posY-1)))
-        elif direction == 'East':
-            self.housesChecked.append(str(str(self.posX+1)+','+str(self.posY)))
-        elif direction == 'South':
-            self.housesChecked.append(str(str(self.posX)+','+str(self.posY+1)))
-        elif direction == 'West':
-            self.housesChecked.append(str(str(self.posX-1)+','+str(self.posY)))
-        else:
-            self.housesChecked.append(str(str(self.posX)+','+str(self.posY)))
 
     def setDirection(self, direction):
         if self.direction != direction:
@@ -295,28 +280,22 @@ class Map:
 
         if direction == 'West' or direction == 'East' or direction == 'North' or direction == 'South':
             self.direction = direction
-
-
-
-
-
+            
     #Lista da accoes que o robo deve fazer por turno dependendo do cheiro na sua casa no ultimo turno
     def listActions(self):
-        if self.posX == 6 and self.posY == 6:
-            self.forkL.dropObject()
-            self.deliveredPieces+=self.currentPieces
-            self.currentPieces = 0
-            if self.deliveredPieces == 2:
-                print('Game over!')
-                checkButton()
-            else:
-                #Vai procurar a outra peça
+        if self.currentPieces == 2:
+            if self.posX == 6 and self.posY == 6:
+                    self.forkL.dropObject()
+                    self.deliveredPieces+=2
+                    self.currentPieces-=2
+                    print('Victory!')
+                    checkButton() #Inserir funcao de aguardar por botao=================================================================
         if self.lastTurnSmell == 0:
             self.search()
-            #colorArray = self.fullRecognition()
-            # zombiesDirections = self.whereZombie(colorArray)
-            # if zombiesDirections[0] != [] or zombiesDirections[1] != []: # are there zombies nearby?
-            #     self.attack(zombiesDirections)
+            colorArray = self.fullRecognition()
+            zombiesDirections = self.whereZombie(colorArray)
+            if zombiesDirections[0] != [] or zombiesDirections[1] != []: # are there zombies nearby?
+                self.attack(zombiesDirections)
         else:
             colorArray = self.fullRecognition()
             zombiesDirections = self.whereZombie(colorArray)
@@ -410,45 +389,35 @@ class Map:
 
     #Adiciona os valores heuristicos dos items as casas adjacentes e calcula a casa com menor valor
     def bestNextHouse(self,itemsAround=None):
-        addValues = self.addItemsToValues(itemsAround)
-
-        if self.posY != 1:
-            north = self.realValuesMap[self.posX-1][self.posY-2] + self.heurValueMap[self.posX-1][self.posY-2]+addValues[0]
-        else:
-            north = 40
-        if self.posX != 6:
-            east = self.realValuesMap[self.posX][self.posY-1] + self.heurValueMap[self.posX][self.posY-1]+addValues[1]
-        else:
-            east = 40
-        if self.posY != 6:
-            south = self.realValuesMap[self.posX-1][self.posY] + self.heurValueMap[self.posX-1][self.posY]+addValues[2]
-        else:
-            south = 40
-        if self.posX != 1:
-            west = self.realValuesMap[self.posX-2][self.posY-1] + self.heurValueMap[self.posX-2][self.posY-1]+addValues[3]
-        else:
-            west = 40
-
-        print('North value: ', str(north))
-        print('East value: ', str(east))
-        print('South value: ', str(south))
-        print('West value: ', str(west))
-
-        min = north # min is the shortest path
-        targetHouse = 'North'
-
-        if min > east:
-            min = east
+        direction = 0
+            direction = 1
             targetHouse = 'East'
         if min > south:
             min = south
+            direction = 2
             targetHouse = 'South'
         if min > west:
             min = west
+            direction = 3
             targetHouse = 'West'
+        
+        if itemsAround[direction][2] != 'Green' and itemsAround[direction][1] == 'Green':
+            if itemsAround[direction][2] == 'Yellow':
+                self.pickObject = True
+                self.currentPieces+=1
+                if self.currentPieces == 2:
+                    for i in range(6)+1:
+                        for j in range(6)+1:
+                            self.heurValueMap[i][j]=0
+            elif itemsAround[direction][2] == 'Red':
+                #FAZER SOM DE CARREGAR BALA!========================================================================
+                self.haveAmmo = True
         return targetHouse
 
     #Calcula a casa para onde deve se movimentar usando a heuristica e movesse para la
     def search(self,colorArray=None):
         targetHouse = self.bestNextHouse(colorArray) #Inserir nesta funçao o array das cores
         self.goDirection(targetHouse)
+        if self.pickObject:
+            self.forkL.pickObject()
+            self.pickObject = False
