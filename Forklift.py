@@ -63,8 +63,8 @@ class Fork:
 
     def setRot(self, rot):
         if rot <= self.maxRot and rot >= -0.5 and rot != self.currentRot:
-            threading.Thread(target=self.waitForSensor, daemon=True).start()
             if self.currentRot <= rot:
+                threading.Thread(target=self.waitForSensor, daemon=True).start()
                 while self.loop and self.currentRot < rot:
                     self.currentRot += 0.2
                     self.fork.movementRot(0.2)

@@ -107,10 +107,10 @@ class MoveTank():
 
     def turnRight(self):
         self.engine.on(self.speed/3, -self.speed/3)        
-        while self.gyro.angle < abs(self.gyroAngle) + 70:
+        while self.gyro.angle < self.gyroAngle + 70:
             pass
         self.engine.on(self.speed/5, -self.speed/5)
-        while self.gyro.angle < abs(self.gyroAngle) + 89:
+        while self.gyro.angle < self.gyroAngle + 89:
             pass
         self.engine.off()
         self.engine.wait_until_not_moving()

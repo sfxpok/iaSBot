@@ -5,7 +5,6 @@
 ###
 from random import randint
 from ev3dev2 import button
-from Forklift import Fork
 from Map import GameMap
 import Attack as at
 
@@ -17,7 +16,6 @@ from time import sleep
 ###
 
 # Variable initialization:
-fork = Fork()
 world = GameMap()
 haveAmmo = False
 deliveredPieces = 0
@@ -44,7 +42,7 @@ def checkButtons():
         if button.Button().right:
             return True
         if button.Button().down:
-            fork.stopAlarm()
+            world.stopAlarm()
         if button.Button().left:
             return False
         """ if button.Button().left:
@@ -56,12 +54,13 @@ def checkButtons():
         """
 
 while True:
-    if checkButtons():
-        if world.listActions():
-            break
-        Sound().beep()
-        Sound().beep()
-        Sound().beep()
+    #if checkButtons():
+    if world.listActions():
+        break
+    Sound().beep()
+    Sound().beep()
+    Sound().beep()
+    input('Clica num botao....')
 
 
 # Main loop:
