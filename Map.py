@@ -46,12 +46,12 @@ class GameMap:
               
         #Mapa de valores heuristicos
         self.heurValueMap = [
-                [25,6,6,6,30],
-                [5,2,2,2,2,5],
-                [5,2,3,3,2,5],
-                [5,2,3,3,2,5],
-                [5,2,2,2,2,5],
-                [30,6,6,6,6,30]] 
+                [25,8,8,8,30],
+                [7,2,2,2,2,7],
+                [7,2,3,3,2,7],
+                [7,2,3,3,2,7],
+                [7,21,2,2,2,7],
+                [30,8,8,8,8,30]] 
 
         self.bulletValue = -10
         self.pieceValue = -15
@@ -162,6 +162,16 @@ class GameMap:
     #Vai para o quadrado numa certa direcao
     def goDirection(self, direction):
         if self.checkInvalidPositions(direction):
+            if self.posX == 5 and self.posY == 2 and direction == 'South':
+                for i in (range(6) + 1):
+                    for j in (range(3) + 4):
+                        self.heurValueMap[i][j] = 0
+            if self.posX == 2 and self.posY == 5 and direction == 'North':
+                for i in (range(6) + 1):
+                    for j in (range(3) + 1):
+                        self.heurValueMap[i][j] = 0
+            
+
             print('Going to ', direction, ' from X=', self.posX, 'and Y=', self.posY)
             print('Current direction: ', self.direction)
             self.setDirection(direction)
@@ -179,10 +189,10 @@ class GameMap:
                 self.posX -= 1
 
             
-            self.heurValueMap[self.posX-1][self.posY-2]+=1
-            self.heurValueMap[self.posX][self.posY-1]+=1
-            self.heurValueMap[self.posX-1][self.posY]+=1
-            self.heurValueMap[self.posX-2][self.posY-1]+=1
+            self.heurValueMap[self.posX-1][self.posY-2]+=2
+            self.heurValueMap[self.posX][self.posY-1]+=2
+            self.heurValueMap[self.posX-1][self.posY]+=2
+            self.heurValueMap[self.posX-2][self.posY-1]+=2
             self.heurValueMap[self.posX-1][self.posY-1]+=2
 
             print('Heuristic Map: ',str(self.heurValueMap[5]))
@@ -234,19 +244,19 @@ class GameMap:
         if direction == 'North':
             if ((self.posX),(self.posY-1)) not in self.housesChecked:
                 self.housesChecked.append(((self.posX),(self.posY-1)))
-                self.heurValueMap[self.posX-1][self.posY-2]+=1
+                self.heurValueMap[self.posX-1][self.posY-2]+=2
         elif direction == 'East':
             if ((self.posX+1),(self.posY)) not in self.housesChecked:
                 self.housesChecked.append(((self.posX+1),(self.posY)))
-                self.heurValueMap[self.posX][self.posY-1]+=1
+                self.heurValueMap[self.posX][self.posY-1]+=2
         elif direction == 'South':
             if ((self.posX),(self.posY+1)) not in self.housesChecked:
                 self.housesChecked.append(((self.posX),(self.posY+1)))
-                self.heurValueMap[self.posX-1][self.posY]+=1
+                self.heurValueMap[self.posX-1][self.posY]+=2
         elif direction == 'West':
             if ((self.posX-1),(self.posY)) not in self.housesChecked:
                 self.housesChecked.append(((self.posX-1),(self.posY)))
-                self.heurValueMap[self.posX-2][self.posY-1]+=1
+                self.heurValueMap[self.posX-2][self.posY-1]+=2
            
     #Faz o reconhecimento todo
     def fullRecognition(self):
