@@ -46,11 +46,11 @@ class GameMap:
               
         #Mapa de valores heuristicos
         self.heurValueMap = [
-                [25,8,8,8,30],
+                [25,6,8,8,8,30],
                 [7,2,2,2,2,7],
                 [7,2,3,3,2,7],
                 [7,2,3,3,2,7],
-                [7,21,2,2,2,7],
+                [7,2,2,2,2,7],
                 [30,8,8,8,8,30]] 
 
         self.bulletValue = -10
@@ -162,14 +162,37 @@ class GameMap:
     #Vai para o quadrado numa certa direcao
     def goDirection(self, direction):
         if self.checkInvalidPositions(direction):
-            if self.posX == 5 and self.posY == 2 and direction == 'South':
-                for i in (range(6) + 1):
-                    for j in (range(3) + 4):
-                        self.heurValueMap[i][j] = 0
+            #if self.posX == 5 and self.posY == 2 and direction == 'South':
+                #for i in range(6):
+                    #for j in range(3,6):
+                        #print(i)
+                        #print(j)
+                        #if (i == 5 and j == 3) or (i == 5 and j == 4) or (i == 0 and j == 3) or (i == 0 and j == 4):
+                            #self.heurValueMap[i][j] = 1
+                        #else:
+                            #self.heurValueMap[i][j] = 0
+            #if self.posX == 2 and self.posY == 2 and direction == 'North':
+                
             if self.posX == 2 and self.posY == 5 and direction == 'North':
-                for i in (range(6) + 1):
-                    for j in (range(3) + 1):
-                        self.heurValueMap[i][j] = 0
+                self.heurValueMap[1][2] = 2
+                self.heurValueMap[1][1] = 0
+            if self.posX == 2 and self.posY == 3 and direction == 'North':
+                self.heurValueMap = [
+                [25,6,8,8,8,30],
+                [7,2,2,2,2,7],
+                [7,2,3,3,2,7],
+                [7,2,3,3,2,7],
+                [7,2,2,2,2,7],
+                [30,8,8,8,8,30]] 
+                #self.heurValueMap[1][2] = 15
+                #for i in range(6):
+                    #for j in range(6):
+                        #print(i)
+                        #print(j)
+                        #if (i == 0 and j == 1) or (i == 0 and j == 2) or (i == 5 and j == 1) or (i == 5 and j == 2):
+                            #self.heurValueMap[i][j] = 1
+                        #else:
+                            #self.heurValueMap[i][j] = 0
             
 
             print('Going to ', direction, ' from X=', self.posX, 'and Y=', self.posY)
