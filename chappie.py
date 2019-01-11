@@ -54,13 +54,13 @@ def checkButtons():
         """
 
 while True:
-    if checkButtons():
-        if world.listActions():
-            break
-        Sound().beep()
-        Sound().beep()
-        Sound().beep()
-    #input('Clica num botao....')
+    #if checkButtons():
+    if world.listActions():
+        break
+    Sound().beep()
+    Sound().beep()
+    Sound().beep()
+    input('Clica num botao....')
 
 
 # Main loop:
