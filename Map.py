@@ -30,7 +30,8 @@ class GameMap:
         self.deliveredPieces = 0
         self.levelOneSmell = False
         self.levelTwoSmell = False
-        self.direction = self.dirCalibration()
+        self.direction = "South"
+        #self.dirCalibration()
         print(self.direction)
         Sound().speak('Direction ' + self.direction)
 
@@ -53,8 +54,8 @@ class GameMap:
                 [7,2,2,2,2,7],
                 [30,8,8,8,8,30]] 
 
-        self.bulletValue = -10
-        self.pieceValue = -18
+        self.bulletValue = -18
+        self.pieceValue = -10
         self.checkedHouseValue = 1
         self.ZombieValue = 40
         self.danger1Value = 1
@@ -128,6 +129,9 @@ class GameMap:
 
         self.engine.turnLeft()
 
+        print('First color: ', firstColor)
+        print('Second color: ', secondColor)
+
         if firstColor == 'Red' and secondColor == 'Red':
             return('West')
         elif firstColor == 'Red' and secondColor == 'Black':
@@ -136,7 +140,7 @@ class GameMap:
             return('East')
         elif firstColor == 'Black' and secondColor == 'Red':
             return('South') 
-        return 'South'
+        return 'Error'
 
 
     def waitforColor(self):
@@ -470,10 +474,13 @@ class GameMap:
             direction_of_attak = zombiesDirections[0][0]
             self.setDirection(direction_of_attak) # attack second zombie in the array
         if self.haveAmmo:
+            self.forkL.setRot(1)
             shoot()
             self.haveAmmo = False
             if direction_of_attak == self.zombie_direction:
                 self.zombie_direction = ''
+            self.forkL.setRot(6.5)
+            
         else:
             punch()
             self.zombie_direction = direction_of_attak
