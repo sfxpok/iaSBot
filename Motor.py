@@ -54,7 +54,7 @@ class MediumMotor(Motor):
         self.engine.on_for_seconds(self.speed, seconds)
 
 class MoveTank():
-    def __init__(self, speed=25):
+    def __init__(self, speed=30):
         self.engine = motor.MoveTank(motor.OUTPUT_A, motor.OUTPUT_B)
         self.speed = speed
         self.gyro = GyroSensor()   

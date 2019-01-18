@@ -45,14 +45,10 @@ def checkButtons():
             world.stopAlarm()
         if button.Button().left:
             return False
-        """ if button.Button().left:
-            print('Button LEFT pressed')
-        if button.Button().right:
-            print('Button RIGHT pressed')
-        if button.Button().enter:
-            print('Button ENTER pressed')
-        """
+        if button.Button().up:
+            world.repeatTurn()
 
+#Main Loop
 while True:
     #if checkButtons():
     if world.listActions():
@@ -60,134 +56,8 @@ while True:
     Sound().beep()
     Sound().beep()
     Sound().beep()
-    input('Clica num botao....')
-
-
-# Main loop:
-""" while True:
-    if checkButtons():
-        itemsAround = world.fullRecognition()  # Get all objets arround me
-
-        if itemsAround[0] == 'Green':
-            world.goDirection('North')
-            haveAmmo = True
-            continue
-        if itemsAround[1] == 'Green':
-            world.goDirection('East')
-            haveAmmo = True
-            continue
-
-        if itemsAround[2] == 'Green':
-            world.goDirection('South')
-            haveAmmo = True
-            continue
-
-        if itemsAround[3] == 'Green':
-            world.goDirection('West')
-            haveAmmo = True
-            continue
-
-        if itemsAround[0] == 'Blue':
-            world.goDirection('North')
-            fork.pickObject()
-            continue
-
-        if itemsAround[1] == 'Blue':
-            world.goDirection('East')
-            fork.pickObject()
-            continue
-
-        if itemsAround[2] == 'Blue':
-            world.goDirection('South')
-            fork.pickObject()
-            continue
-
-        if itemsAround[3] == 'Blue':
-            world.goDirection('West')
-            fork.pickObject()
-            continue
-
-        if itemsAround[0] == 'Brown':
-            world.setDirection('North')
-            if haveAmmo:
-                at.shoot()
-            else:
-                at.punch()
-            i = randint(0, 2)
-            if i == 0:
-                world.goDirection('East')
-                continue
-            if i == 1:
-                world.goDirection('South')
-                continue
-            if i == 2:
-                world.goDirection('West')
-                continue
-
-        if itemsAround[1] == 'Brown':
-            world.setDirection('East')
-            if haveAmmo:
-                at.shoot()
-            else:
-                at.punch()
-            i = randint(0, 2)
-            if i == 0:
-                world.goDirection('North')
-                continue
-            if i == 1:
-                world.goDirection('South')
-                continue
-            if i == 2:
-                world.goDirection('West')
-                continue
-
-        if itemsAround[2] == 'Brown':
-            world.setDirection('South')
-            if haveAmmo:
-                at.shoot()
-            else:
-                at.punch()
-            i = randint(0, 2)
-            if i == 0:
-                world.goDirection('North')
-                continue
-            if i == 1:
-                world.goDirection('East')
-                continue
-            if i == 2:
-                world.goDirection('West')
-                continue
-
-        if itemsAround[3] == 'Brown':
-            world.setDirection('West')
-            if haveAmmo:
-                at.shoot()
-            else:
-                at.punch()
-            i = randint(0, 2)
-            if i == 0:
-                world.goDirection('North')
-                continue
-            if i == 1:
-                world.goDirection('East')
-                continue
-            if i == 2:
-                world.goDirection('South')
-                continue
-
-        i = randint(0, 3)
-        print('Trying to go: ' + str(i))
-        if i == 0:
-            world.goDirection('North')
-            continue
-        if i == 1:
-            world.goDirection('East')
-            continue
-        if i == 2:
-            world.goDirection('South')
-            continue
-        if i == 3:
-            world.goDirection('West')
-            continue
- """
-
+    print('Clica num botao....')
+    x = input()
+    #No caso do sensor de cor falhar
+    if x == '3':
+        world.repeatTurn()

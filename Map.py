@@ -13,7 +13,7 @@ from ev3dev2.sensor.lego import ColorSensor
 from Attack import punch, shoot
 from Forklift import Fork
 
-
+#Returns color from sensor
 def checkColor():
     color = ColorDetector().getColor()
     print ('the color detected is ', color)
@@ -54,14 +54,14 @@ class GameMap:
                 [7,2,2,2,2,7],
                 [30,8,8,8,8,30]] 
 
-        self.bulletValue = -18
-        self.pieceValue = -10
-        self.checkedHouseValue = 1
+        #Valores heuristicos das pecas/bala/zombie/cheiros
+        self.bulletValue = -28
+        self.pieceValue = -20
         self.ZombieValue = 40
-        self.danger1Value = 1
-        self.danger2Value = 2
-        self.danger3Value = 3
-        self.danger4Value = 4
+        self.danger1Value = 5
+        self.danger2Value = 10
+        self.danger3Value = 15
+        self.danger4Value = 20
 
 
         #Valores heuristicos das cores dos cheiros
@@ -91,10 +91,68 @@ class GameMap:
         }
 
         self.lastTurnSmell = 0  #Cheiro do ultimo turno
+        self.recFirstLastTurn = False
         self.catchBullet = False #Tem bala para levantar
         self.pickBullet_direction = ''
         self.pickPiece_direction = ''
         self.zombie_direction = ''
+
+
+        #Variaveis de emergencia
+        self.safe_posX = self.posX
+        self.safe_posY = self.posY
+        self.safe_haveAmmo = self.haveAmmo
+        self.safe_currentPieces = self.currentPieces
+        self.safe_deliveredPieces = self.deliveredPieces
+        self.safe_levelOneSmell = self.levelOneSmell
+        self.safe_levelTwoSmell = self.levelTwoSmell
+        self.safe_direction = self.direction
+        self.safe_heurValueMap = self.heurValueMap
+        self.safe_lastTurnSmell = self.lastTurnSmell
+        self.safe_recFirstLastTurn = self.recFirstLastTurn
+        self.safe_catchBullet = self.catchBullet
+        self.safe_pickBullet_direction = self.pickBullet_direction
+        self.safe_pickPiece_direction = self.pickPiece_direction
+        self.safe_zombie_direction = self.zombie_direction
+
+
+    #Guardar variaveis de emergencia em caso de o sensor falhar
+    def saveTurn(self):
+        self.safe_posX = self.posX
+        self.safe_posY = self.posY
+        self.safe_haveAmmo = self.haveAmmo
+        self.safe_currentPieces = self.currentPieces
+        self.safe_deliveredPieces = self.deliveredPieces
+        self.safe_levelOneSmell = self.levelOneSmell
+        self.safe_levelTwoSmell = self.levelTwoSmell
+        self.safe_direction = self.direction
+        self.safe_heurValueMap = self.heurValueMap
+        self.safe_lastTurnSmell = self.lastTurnSmell
+        self.safe_recFirstLastTurn = self.recFirstLastTurn
+        self.safe_catchBullet = self.catchBullet
+        self.safe_pickBullet_direction = self.pickBullet_direction
+        self.safe_pickPiece_direction = self.pickPiece_direction
+        self.safe_zombie_direction = self.zombie_direction
+
+    #Usar as variaveis de emergencia
+    def repeatTurn(self):
+        print('Going to repeat turn!')
+        self.posX = self.safe_posX
+        self.posY = self.safe_posY
+        self.haveAmmo = self.safe_haveAmmo
+        self.currentPieces = self.safe_currentPieces
+        self.deliveredPieces = self.safe_deliveredPieces
+        self.levelOneSmell = self.safe_levelOneSmell
+        self.levelTwoSmell = self.safe_levelTwoSmell
+        self.direction = self.safe_direction
+        self.heurValueMap = self.safe_heurValueMap
+        self.lastTurnSmell = self.safe_lastTurnSmell
+        self.recFirstLastTurn = self.safe_recFirstLastTurn
+        self.catchBullet = self.safe_catchBullet
+        self.pickBullet_direction = self.safe_pickBullet_direction
+        self.pickPiece_direction = self.safe_pickPiece_direction
+        self.zombie_direction = self.safe_zombie_direction
+
 
     def updateScreen(self):
 
@@ -132,6 +190,8 @@ class GameMap:
         print('First color: ', firstColor)
         print('Second color: ', secondColor)
 
+
+        #Define a direcao inicial dependendo das duas cores lidas
         if firstColor == 'Red' and secondColor == 'Red':
             return('West')
         elif firstColor == 'Red' and secondColor == 'Black':
@@ -172,20 +232,12 @@ class GameMap:
     #Vai para o quadrado numa certa direcao
     def goDirection(self, direction):
         if self.checkInvalidPositions(direction):
-            #if self.posX == 5 and self.posY == 2 and direction == 'South':
-                #for i in range(6):
-                    #for j in range(3,6):
-                        #print(i)
-                        #print(j)
-                        #if (i == 5 and j == 3) or (i == 5 and j == 4) or (i == 0 and j == 3) or (i == 0 and j == 4):
-                            #self.heurValueMap[i][j] = 1
-                        #else:
-                            #self.heurValueMap[i][j] = 0
-            #if self.posX == 2 and self.posY == 2 and direction == 'North':
             
+            #Altera o valor da heuristica para o robo conseguir chegar a casa (2,2)
             if self.posX == 2 and self.posY == 5 and direction == 'North':
                 self.heurValueMap[1][2] = 2
                 self.heurValueMap[1][1] = 0
+            #Faz reset a heuristica do mapa, para assim poder continuar voltas ao mapa
             if self.posX == 2 and self.posY == 3 and direction == 'North':
                 self.heurValueMap = [
                 [25,6,8,8,8,30],
@@ -193,16 +245,7 @@ class GameMap:
                 [7,2,3,3,2,7],
                 [7,2,3,3,2,7],
                 [7,2,2,2,2,7],
-                [30,8,8,8,8,30]] 
-                #self.heurValueMap[1][2] = 15
-                #for i in range(6):
-                    #for j in range(6):
-                        #print(i)
-                        #print(j)
-                        #if (i == 0 and j == 1) or (i == 0 and j == 2) or (i == 5 and j == 1) or (i == 5 and j == 2):
-                            #self.heurValueMap[i][j] = 1
-                        #else:
-                            #self.heurValueMap[i][j] = 0
+                [30,8,8,8,8,30]]
             
 
             print('Going to ', direction, ' from X=', self.posX, 'and Y=', self.posY)
@@ -212,6 +255,7 @@ class GameMap:
             distToMoveOneSquareMotorB = 1128
             distToMoveOneSquare = (distToMoveOneSquareMotorA + distToMoveOneSquareMotorB)/2
             self.engine.movementDeg(distToMoveOneSquare)
+            #Altera as suas coordenadas dependendo da direcao para onde vai
             if direction == 'North':
                 self.posY -= 1
             elif direction == 'South':
@@ -221,9 +265,9 @@ class GameMap:
             elif direction == 'West':
                 self.posX -= 1
 
-
-            if self.currentPieces == 2:
-                if (self.posX == 6 and self.posY ==6):
+            #Caso chegue a mota com duas pecas
+            if self.currentPieces >= 1:
+                if (self.posX == 6 and self.posY == 6):
                     self.forkL.dropObject()
                     self.deliveredPieces+=2
                     self.currentPieces-=2
@@ -237,14 +281,13 @@ class GameMap:
             self.heurValueMap[self.posX-2][self.posY-1]+=2
             self.heurValueMap[self.posX-1][self.posY-1]+=2 """
 
-            print('Heuristic Map: ',str(self.heurValueMap[5]))
-            print('               ',str(self.heurValueMap[4]))
-            print('               ',str(self.heurValueMap[3]))
-            print('               ',str(self.heurValueMap[2]))
-            print('               ',str(self.heurValueMap[1]))
-            print('               ',str(self.heurValueMap[0]))
-
-
+            #Dar print da heuristica do mapa(apenas as casas) para testes(Inclinar cabeca para a esquerda)
+            # print('Heuristic Map: ',str(self.heurValueMap[5]))
+            # print('               ',str(self.heurValueMap[4]))
+            # print('               ',str(self.heurValueMap[3]))
+            # print('               ',str(self.heurValueMap[2]))
+            # print('               ',str(self.heurValueMap[1]))
+            # print('               ',str(self.heurValueMap[0]))
 
             self.updateScreen()
 
@@ -281,7 +324,7 @@ class GameMap:
         return 'Invalid'
 
 
-    #Adiciona 1 a heuristica do quadrado para onde vai fazer o reconhecimento
+    #Adiciona 2 a heuristica do quadrado para onde vai fazer o reconhecimento
     def addHeurAfterRecog(self,direction):
 
         if direction == 'North':
@@ -322,6 +365,7 @@ class GameMap:
                     self.itemsAround[i][j] = 'White'
         print('Colors: ',str(self.itemsAround))
 
+        #Array dos cheiros para o robo determinar o cheiro na sua casa
         smellsValues = []
         if self.itemsAround[0][0] != 'White':
             smellsValues.append(self.smellValues[self.itemsAround[0][0]])
@@ -339,19 +383,12 @@ class GameMap:
             smellsValues.append(self.smellValues[self.itemsAround[3][0]])
         else:
             smellsValues.append(0)
+        #Determina o cheiro na sua casa para poder usar no proximo turno
         self.lastTurnSmell = self.saveSmell(smellsValues)
 
+        #Adiciona 2 ao valor heuristico da casa presente apenas no caso que nao tenha duas pecas
         if self.currentPieces < 2:
-            #Adiciona 1 ao valor heuristico da casa presente
             self.heurValueMap[self.posX-1][self.posY-1]+=2
-
-        #Imprime o mapa da heuristica(Inclinar a cabeca para a esquerda)
-        print('Heuristic Map: ',str(self.heurValueMap[5]))
-        print('               ',str(self.heurValueMap[4]))
-        print('               ',str(self.heurValueMap[3]))
-        print('               ',str(self.heurValueMap[2]))
-        print('               ',str(self.heurValueMap[1]))
-        print('               ',str(self.heurValueMap[0]))
         
         return self.itemsAround
 
@@ -406,38 +443,44 @@ class GameMap:
             self.direction = direction
 
 
-
-
-
     #Lista da accoes que o robo deve fazer por turno dependendo do cheiro na sua casa no ultimo turno
-    #Esta funcao devolve True se o robo ja ganhou o jogo
     def listActions(self):
-        #Verifica se ele ja esta na mota com duas pecas para ganhar
-        if self.currentPieces == 2:
-            if self.posX == 6 and self.posY == 6:
-                    self.forkL.dropObject()
-                    self.deliveredPieces+=2
-                    self.currentPieces-=2
-                    print('Victory!')
-                    return True
-        if self.lastTurnSmell == 0:
+        #Imprime a direcao inicial e guarda os valores de emergencia
+        print('Starting direction: ', self.direction)
+        self.saveTurn()
+
+        #Realizar esta lista de accoes se o cheiro no ultimo turno era 0
+        if self.lastTurnSmell == 0 and not(self.recFirstLastTurn):
             self.search() 
             colorArray = self.fullRecognition()
             self.rememberLastTurn(colorArray)
             zombiesDirections = self.whereZombie(colorArray)
             if zombiesDirections != [[],[]]: # are there zombies nearby?
                 self.attack(zombiesDirections)
-
-
+            self.recFirstLastTurn = False
+            
+        #Realizar esta lista de accoes caso o cheiro no ultimo turno nao era 0
         else:
             colorArray = self.fullRecognition()
             self.rememberLastTurn(colorArray)
             zombiesDirections = self.whereZombie(colorArray)
-            if zombiesDirections[0] != [] or zombiesDirections[1] != []: # are there zombies nearby?
+            if zombiesDirections[0] != [] or zombiesDirections[1] != []: # Existe zombies por perto?
                 self.attack(zombiesDirections)
-            self.search(colorArray)   #Insere o array========================================================
+            self.search(colorArray) 
+            self.recFirstLastTurn = True
+        
+        #Imprime o mapa da heuristica(Inclinar a cabeca para a esquerda)
+        print('Heuristic Map: ',str(self.heurValueMap[5]))
+        print('               ',str(self.heurValueMap[4]))
+        print('               ',str(self.heurValueMap[3]))
+        print('               ',str(self.heurValueMap[2]))
+        print('               ',str(self.heurValueMap[1]))
+        print('               ',str(self.heurValueMap[0]))
+
         return False
 
+
+    #Guarda as direcoes dos zombies/pecas/bala para nao se esquecer no proximo turno
     def rememberLastTurn(self, colorArray):
 
         directions = {
@@ -448,25 +491,28 @@ class GameMap:
         }
 
         for direction_int in range(4):
-            if colorArray[direction_int][1] != 'Green':
+            if colorArray[direction_int][1] != 'Green' and colorArray[direction_int][1] != 'White':
                 self.zombie_direction = directions[direction_int]
+                print('Zombie detected! Direction: ', self.zombie_direction)
             if colorArray[direction_int][2] == 'Yellow':
                 self.pickPiece_direction = directions[direction_int]
+                print('Piece detected! Direction: ', self.pickPiece_direction)
             if colorArray[direction_int][2] == 'Red':
                 self.pickBullet_direction = directions[direction_int]
+                print('Bullet detected! Direction: ', self.pickBullet_direction)
 
-    #Attaque do robo. Se ele tiver a bala ele dispara, senao ele da o ataque de machete
+    #O robo ataca se houver um zombie. Se ele tiver a bala ele dispara, senao ele da o ataque de machete
     def attack(self,zombiesDirections):
         if zombiesDirections[1] != []: # Priority to attack zombie with piece
             direction_of_attak = zombiesDirections[1][0]
             self.setDirection(direction_of_attak) # attack first zombie in the array
             self.currentPieces+=1
             self.forkL.startAlarm()
+            #Limpa a heuristica do mapa(excepto os cantos)
             if self.currentPieces == 2:
                         for i in range(6):
                             for j in range(6):
                                 self.heurValueMap[i][j] = 0
-
                         self.heurValueMap[0][0] = 30
                         self.heurValueMap[0][5] = 30
                         self.heurValueMap[5][0] = 30
@@ -480,7 +526,6 @@ class GameMap:
             if direction_of_attak == self.zombie_direction:
                 self.zombie_direction = ''
             self.forkL.setRot(6.5)
-            
         else:
             punch()
             self.zombie_direction = direction_of_attak
@@ -524,38 +569,50 @@ class GameMap:
         #smellsValues[2]-->SmellSouth
         #smellsValues[3]-->SmellWest
 
-        if ((smellsValues[0] >= 2 and smellsValues[1] >= 2) or
-            (smellsValues[1] >= 2 and smellsValues[2] >= 2) or
-            (smellsValues[2] >= 2 and smellsValues[3] >= 2) or
-            (smellsValues[3] >= 2 and smellsValues[0] >= 2)):
+        if ((smellsValues[0] >= 2) or
+            (smellsValues[1] >= 2) or
+            (smellsValues[2] >= 2) or
+            (smellsValues[3] >= 2) or
+            (smellsValues[0] >= 1 and smellsValues[1] >= 1) or
+            (smellsValues[1] >= 1 and smellsValues[2] >= 1) or
+            (smellsValues[2] >= 1 and smellsValues[3] >= 1) or
+            (smellsValues[3] >= 1 and smellsValues[0] >= 1)):
+            print('Smell different from zero')
             return 2    #Aqui o valor nao interessa, o importante e que nao seja 0
         else:
+            print('Smell is zero')
             return 0
 
-    #Devolve um array com os valores heuristicos correspondentes
+    #Devolve um array com os valores heuristicos que e necessario acrescentar as casas
     def addItemsToValues(self,itemsAround=[0,0,0,0]):
 
         counter = 1
         addValues = []
-
-        if itemsAround != [0,0,0,0]:
-            for direction in itemsAround:
-                for color in direction:
-                    directionValue = 0
-                    if counter == 1:
-                        directionValue += self.smellValues[color]
-                    elif counter == 2:
-                        directionValue += self.zombieValues[color]
-                    elif counter == 3:
-                        directionValue += self.zombieValues[color]
-                counter += 1
-                addValues.append(directionValue)
-        else:
+        
+        try:
+            if itemsAround != [0,0,0,0]:
+                for direction in itemsAround:
+                    for color in direction:
+                        directionValue = 0
+                        if counter == 1:
+                            directionValue += self.smellValues[color]
+                        elif counter == 2:
+                            directionValue += self.zombieValues[color]
+                        elif counter == 3:
+                            directionValue += self.pieceValues[color]
+                        counter += 1
+                    counter = 1
+                    addValues.append(directionValue)
+            else:
+                addValues = [0,0,0,0]
+        except:
             addValues = [0,0,0,0]
+
+        print('AddValues: ', str(addValues))
         
         return addValues
 
-    #Adiciona os valores heuristicos dos items as casas adjacentes e calcula a casa com menor valor
+    #Calcula a casa com menor valor heuristico
     def bestNextHouse(self,itemsAround=None):
 
         if itemsAround == None:
@@ -565,39 +622,46 @@ class GameMap:
 
         if self.posY != 1:
             north = self.realValuesMap[self.posX-1][self.posY-2] + self.heurValueMap[self.posX-1][self.posY-2]+addValues[0]
-            if self.pickPiece_direction == 'North':
+            print('North value: ', str(north))
+            if self.pickPiece_direction == 'North' and addValues[0]<-10:
                 north += self.pieceValue
-            if self.pickBullet_direction == 'North':
+            if self.pickBullet_direction == 'North' and addValues[0]<-18:
                 north += self.bulletValue
             if self.zombie_direction == 'North':
                 north += self.ZombieValue
         else:
             north = 40
+
         if self.posX != 6:
             east = self.realValuesMap[self.posX][self.posY-1] + self.heurValueMap[self.posX][self.posY-1]+addValues[1]
-            if self.pickPiece_direction == 'East':
+            print('East value: ', str(east))
+            if self.pickPiece_direction == 'East' and addValues[1]<-10:
                 east += self.pieceValue
-            if self.pickBullet_direction == 'East':
+            if self.pickBullet_direction == 'East' and addValues[1]<-18:
                 east += self.bulletValue
             if self.zombie_direction == 'East':
                 east += self.ZombieValue
         else:
             east = 40
+
         if self.posY != 6:
             south = self.realValuesMap[self.posX-1][self.posY] + self.heurValueMap[self.posX-1][self.posY]+addValues[2]
-            if self.pickPiece_direction == 'South':
+            print('South value: ', str(south))
+            if self.pickPiece_direction == 'South' and addValues[2]<-10:
                 south += self.pieceValue
-            if self.pickBullet_direction == 'South':
+            if self.pickBullet_direction == 'South' and addValues[2]<-18:
                 south += self.bulletValue
             if self.zombie_direction == 'South':
                 south += self.ZombieValue                            
         else:
             south = 40
+
         if self.posX != 1:
             west = self.realValuesMap[self.posX-2][self.posY-1] + self.heurValueMap[self.posX-2][self.posY-1]+addValues[3]
-            if self.pickPiece_direction == 'West':
+            print('West value: ', str(west))
+            if self.pickPiece_direction == 'West' and addValues[3]<-10:
                 west += self.pieceValue
-            if self.pickBullet_direction == 'West':
+            if self.pickBullet_direction == 'West' and addValues[3]<-18:
                 west += self.bulletValue
             if self.zombie_direction == 'West':
                 west += self.ZombieValue
@@ -614,36 +678,34 @@ class GameMap:
 
         if min > east:
             min = east
-            #direction = 1
             targetHouse = 'East'
         if min > south:
             min = south
-            #direction = 2
             targetHouse = 'South'
         if min > west:
             min = west
-            #direction = 3
             targetHouse = 'West'
-        
-        # if itemsAround != [0,0,0,0]:
-        #     if itemsAround[direction][2] != 'Green' and itemsAround[direction][1] == 'Green':
-        #         if itemsAround[direction][2] == 'Yellow':
-        #             self.pickPiece_direction = direction
-        #         elif itemsAround[direction][2] == 'Red':
-        #             self.pickBullet_direction = direction
-        #     if itemsAround[direction][1] != 'Green':
-        #         self.zombie_direction = direction
+
+        #Dar print da heuristica do mapa(apenas as casas) para testes(Inclinar cabeca para a esquerda)
+        print('Heuristic Map: ',str(self.heurValueMap[5]))
+        print('               ',str(self.heurValueMap[4]))
+        print('               ',str(self.heurValueMap[3]))
+        print('               ',str(self.heurValueMap[2]))
+        print('               ',str(self.heurValueMap[1]))
+        print('               ',str(self.heurValueMap[0]))
                 
         return targetHouse
 
     #Calcula a casa para onde deve se movimentar usando a heuristica e movesse para la
     def search(self,colorArray=None):
-        targetHouse = self.bestNextHouse(colorArray) #Inserir nesta funçao o array das cores
+        targetHouse = self.bestNextHouse(colorArray)
         self.goDirection(targetHouse)
+        #Caso tenha uma peca para onde o robo se movimentou
         if self.pickPiece_direction == targetHouse:
             self.forkL.pickObject()
             self.currentPieces+=1
             self.forkL.startAlarm()
+            #Limpa a heuristica do mapa(excepto os cantos)
             if self.currentPieces == 2:
                 for i in range(6):
                     for j in range(6):
@@ -652,10 +714,12 @@ class GameMap:
                 self.heurValueMap[0][1]=30
                 self.heurValueMap[0][5]=30
                 self.heurValueMap[5][0]=30
+        #Caso tenha uma bala para onde o robo se movimentou
         elif self.pickBullet_direction == targetHouse:
             print('Apanhei uma bala!!!\n\n\n\n\n')
             Sound().play('/home/robot/iaSBot/sound/load.wav')
             self.haveAmmo = True
+        #Dar reset as direcoes das pecas/bala/zombies
         self.zombie_direction = ''
         self.pickPiece_direction = ''
         self.pickBullet_direction = '' 
