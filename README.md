@@ -10,10 +10,18 @@ Developed with Visual Studio Code along with the extension [ev3dev-browser](http
 
 The [ev3dev](https://www.ev3dev.org/) firmware was used for the development of this project with a memory card. Usually our computers were always connected to the Brickman with Bluetooth.
 
+### Usage
+
+Connect to the Brickman through Bluetooth (or WLAN) and start a SSH session. To start the game, run this on the Brickman:
+
+```
+python3 chappie.py
+```
+
 ### Sensors
 
 - INPUT_1: Touch sensor
-- INPUT_2: Ultrasonic sensor
+- INPUT_2: ~~Ultrasonic sensor~~ N/A
 - INPUT_3: Color sensor
 - INPUT_4: Gyro sensor
 
